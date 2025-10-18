@@ -269,7 +269,6 @@ export default function TermDetailScreen() {
       <TouchableOpacity style={styles.backdrop} onPress={handleClose} activeOpacity={1} />
 
       <View style={[styles.modal, { backgroundColor: colors.background }]}>
-        <View style={styles.modalGlowBorder} />
         <View style={styles.header}>
           <View style={styles.difficultyWrapper}>
             {term.difficulty > 0 && (
@@ -419,23 +418,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingTop: 0,
     height: '100%',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  modalGlowBorder: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    right: 20,
-    bottom: 20,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: 'rgba(59, 130, 246, 0.8)',
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    pointerEvents: 'none',
   },
   header: {
     flexDirection: 'row',
