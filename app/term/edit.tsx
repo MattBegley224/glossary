@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 20,
-    maxHeight: '90%',
+    height: '100%',
   },
   header: {
     flexDirection: 'row',
