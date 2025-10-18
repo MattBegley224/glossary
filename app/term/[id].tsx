@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   termName: {
     fontSize: 32,
