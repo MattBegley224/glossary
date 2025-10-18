@@ -598,10 +598,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScrollContent: {
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
-    minHeight: '100%',
+    paddingVertical: 40,
   },
   cardLabel: {
     fontSize: 12,
