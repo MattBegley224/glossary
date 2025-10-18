@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContainer: {
-    height: 400,
+    height: 450,
     marginBottom: 24,
   },
   card: {
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    marginTop: 20,
+    marginTop: 40,
     gap: 12,
   },
   sliderTrack: {
