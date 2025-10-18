@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContainer: {
-    minHeight: 390,
+    minHeight: 385,
     marginBottom: 5,
   },
   card: {
