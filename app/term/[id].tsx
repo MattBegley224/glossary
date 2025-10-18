@@ -23,6 +23,50 @@ import Animated, {
 import { database } from '@/services/database';
 import { TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
+import { parseDefinitionForLinks, TextSegment } from '@/utils/termLinking';
+
+interface LinkedDefinitionProps {
+  definition: string;
+  allTerms: TermWithSubjects[];
+  currentTermId: string;
+  textColor: string;
+  linkColor: string;
+}
+
+function LinkedDefinition({
+  definition,
+  allTerms,
+  currentTermId,
+  textColor,
+  linkColor,
+}: LinkedDefinitionProps) {
+  const segments = parseDefinitionForLinks(definition, allTerms, currentTermId);
+
+  const handleTermPress = (termId: string) => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    router.push(`/term/${termId}`);
+  };
+
+  return (
+    <Text style={[styles.definition, { color: textColor }]}>
+      {segments.map((segment, index) => {
+        if (segment.isLink && segment.termId) {
+          return (
+            <Text
+              key={index}
+              style={{ color: linkColor, textDecorationLine: 'underline' }}
+              onPress={() => handleTermPress(segment.termId!)}>
+              {segment.text}
+            </Text>
+          );
+        }
+        return <Text key={index}>{segment.text}</Text>;
+      })}
+    </Text>
+  );
+}
 
 export default function TermDetailScreen() {
   const colorScheme = useColorScheme();
@@ -30,6 +74,7 @@ export default function TermDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
 
   const [term, setTerm] = useState<TermWithSubjects | null>(null);
+  const [allTerms, setAllTerms] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -56,8 +101,12 @@ export default function TermDetailScreen() {
     if (!params.id) return;
 
     try {
-      const data = await database.terms.getById(params.id);
-      setTerm(data);
+      const [termData, allTermsData] = await Promise.all([
+        database.terms.getById(params.id),
+        database.terms.getAll(),
+      ]);
+      setTerm(termData);
+      setAllTerms(allTermsData);
     } catch (error) {
       console.error('Error loading term:', error);
     } finally {
@@ -235,7 +284,13 @@ export default function TermDetailScreen() {
                   styles.cardBack,
                 ]}>
                 <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                <Text style={[styles.definition, { color: colors.text }]}>{term.definition}</Text>
+                <LinkedDefinition
+                  definition={term.definition}
+                  allTerms={allTerms}
+                  currentTermId={term.id}
+                  textColor={colors.text}
+                  linkColor={colors.primary}
+                />
               </Animated.View>
             </View>
           </TouchableOpacity>
