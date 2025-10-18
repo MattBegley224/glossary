@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 8,
   },
   cardLabel: {
     fontSize: 12,
