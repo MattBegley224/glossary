@@ -31,7 +31,7 @@ interface LinkedDefinitionProps {
   currentTermId: string;
   textColor: string;
   linkColor: string;
-  onExpandChange?: (isExpanded: boolean) => void;
+  needsTruncation: boolean;
 }
 
 function LinkedDefinition({
@@ -40,7 +40,7 @@ function LinkedDefinition({
   currentTermId,
   textColor,
   linkColor,
-  onExpandChange,
+  needsTruncation,
 }: LinkedDefinitionProps) {
   const [showFullText, setShowFullText] = useState(false);
   const CHARACTER_LIMIT = 300;
@@ -58,14 +58,8 @@ function LinkedDefinition({
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    const newValue = !showFullText;
-    setShowFullText(newValue);
-    onExpandChange?.(newValue);
+    setShowFullText(!showFullText);
   };
-
-  // Calculate total text length
-  const totalLength = segments.reduce((sum, segment) => sum + segment.text.length, 0);
-  const needsTruncation = totalLength > CHARACTER_LIMIT;
 
   // If showing full text or no truncation needed, render all segments
   if (showFullText || !needsTruncation) {
@@ -157,7 +151,6 @@ export default function TermDetailScreen() {
   const [allTerms, setAllTerms] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const flipProgress = useSharedValue(0);
 
@@ -369,7 +362,7 @@ export default function TermDetailScreen() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
                 bounces={false}>
-                {!isExpanded && (
+                {term.definition.length <= 300 && (
                   <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
                 )}
                 <LinkedDefinition
@@ -378,7 +371,7 @@ export default function TermDetailScreen() {
                   currentTermId={term.id}
                   textColor={colors.text}
                   linkColor={colors.primary}
-                  onExpandChange={setIsExpanded}
+                  needsTruncation={term.definition.length > 300}
                 />
               </ScrollView>
             </Animated.View>
