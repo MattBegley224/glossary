@@ -339,7 +339,7 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 2 },
+                { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 1 },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
@@ -404,7 +404,7 @@ export default function TermDetailScreen() {
 
         <View style={styles.footer}>
           <TouchableOpacity
-            style={[styles.actionButton, { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 2 }]}
+            style={[styles.actionButton, { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 1 }]}
             onPress={handleEdit}
             activeOpacity={0.7}>
             <View style={styles.buttonGlow} pointerEvents="none">
@@ -434,7 +434,7 @@ export default function TermDetailScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, { backgroundColor: colors.card, borderColor: colors.error, borderWidth: 2 }]}
+            style={[styles.actionButton, { backgroundColor: colors.card, borderColor: colors.error, borderWidth: 1 }]}
             onPress={handleDelete}
             activeOpacity={0.7}>
             <View style={styles.buttonGlow} pointerEvents="none">
