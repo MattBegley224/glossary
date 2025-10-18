@@ -545,7 +545,6 @@ const styles = StyleSheet.create({
     height: 350,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
-    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -568,14 +567,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 15,
+    height: 40,
   },
   glowBottom: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 15,
+    height: 40,
     transform: [{ rotate: '180deg' }],
   },
   glowLeft: {
@@ -583,14 +582,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: 15,
+    width: 40,
   },
   glowRight: {
     position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
-    width: 15,
+    width: 40,
   },
   cardTouchable: {
     flex: 1,
@@ -602,6 +601,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     overflow: 'hidden',
+    padding: 32,
   },
   cardScroll: {
     flex: 1,
@@ -609,8 +609,7 @@ const styles = StyleSheet.create({
   },
   cardScrollContent: {
     alignItems: 'center',
-    paddingVertical: 40,
-    paddingBottom: 60,
+    paddingBottom: 20,
   },
   cardLabel: {
     fontSize: 12,
