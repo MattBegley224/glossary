@@ -348,6 +348,20 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.cardScrollContent}
+                style={styles.cardScroll}>
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                <LinkedDefinition
+                  definition={term.definition}
+                  allTerms={allTerms}
+                  currentTermId={term.id}
+                  textColor={colors.text}
+                  linkColor={colors.primary}
+                  fontSize={18 * textSizeMultiplier}
+                />
+              </ScrollView>
               <View style={styles.cardInnerGlow} pointerEvents="none">
                 <LinearGradient
                   colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
@@ -370,21 +384,6 @@ export default function TermDetailScreen() {
                   style={styles.glowRight}
                 />
               </View>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.cardScrollContent}
-                style={styles.cardScroll}
-                bounces={false}>
-                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                <LinkedDefinition
-                  definition={term.definition}
-                  allTerms={allTerms}
-                  currentTermId={term.id}
-                  textColor={colors.text}
-                  linkColor={colors.primary}
-                  fontSize={18 * textSizeMultiplier}
-                />
-              </ScrollView>
             </Animated.View>
           </View>
         </ScrollView>
@@ -549,8 +548,7 @@ const styles = StyleSheet.create({
   },
   cardBack: {
     minHeight: '100%',
-    maxHeight: '100%',
-    flexDirection: 'column',
+    flex: 1,
   },
   cardInnerGlow: {
     position: 'absolute',
@@ -596,13 +594,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScroll: {
-    flex: 1,
     width: '100%',
   },
   cardScrollContent: {
-    flexGrow: 1,
     alignItems: 'center',
     paddingVertical: 40,
+    paddingBottom: 60,
   },
   cardLabel: {
     fontSize: 12,
