@@ -331,13 +331,20 @@ export default function TermDetailScreen() {
           {term.subjects.length > 0 && (
             <View style={styles.subjectsContainer}>
               {term.subjects.map((subject) => (
-                <View
+                <TouchableOpacity
                   key={subject.id}
-                  style={[styles.subjectChip, { backgroundColor: subject.color + '20' }]}>
+                  style={[styles.subjectChip, { backgroundColor: subject.color + '20' }]}
+                  onPress={() => {
+                    if (Platform.OS !== 'web') {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    router.push(`/subject/${subject.id}`);
+                  }}
+                  activeOpacity={0.7}>
                   <Text style={[styles.subjectChipText, { color: subject.color }]}>
                     {subject.name}
                   </Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           )}
