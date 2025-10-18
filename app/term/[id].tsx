@@ -9,7 +9,6 @@ import {
   Platform,
   Alert,
   Share,
-  Slider,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -420,16 +419,39 @@ export default function TermDetailScreen() {
 
         <View style={styles.textSizeContainer}>
           <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
-          <Slider
-            style={styles.slider}
-            minimumValue={0.5}
-            maximumValue={2}
-            value={textSizeMultiplier}
-            onValueChange={setTextSizeMultiplier}
-            minimumTrackTintColor={colors.primary}
-            maximumTrackTintColor={colors.secondaryText}
-            thumbTintColor={colors.primary}
-          />
+          <View style={styles.sliderTrack}>
+            <View style={[styles.sliderFill, { width: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]} />
+            <TouchableOpacity
+              style={[styles.sliderThumb, { left: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]}
+              onPressIn={(e) => {
+                const target = e.currentTarget;
+                const handleMove = (moveEvent: any) => {
+                  const containerWidth = target.parentElement?.offsetWidth || 300;
+                  const x = moveEvent.clientX - (target.parentElement?.getBoundingClientRect().left || 0);
+                  const percentage = Math.max(0, Math.min(1, x / containerWidth));
+                  setTextSizeMultiplier(0.5 + percentage * 1.5);
+                };
+                const handleEnd = () => {
+                  document.removeEventListener('mousemove', handleMove);
+                  document.removeEventListener('mouseup', handleEnd);
+                };
+                document.addEventListener('mousemove', handleMove);
+                document.addEventListener('mouseup', handleEnd);
+              }}
+              activeOpacity={0.8}
+            />
+            <TouchableOpacity
+              style={styles.sliderClickArea}
+              onPress={(e) => {
+                const target = e.currentTarget as any;
+                const containerWidth = target.offsetWidth;
+                const x = e.nativeEvent.locationX;
+                const percentage = Math.max(0, Math.min(1, x / containerWidth));
+                setTextSizeMultiplier(0.5 + percentage * 1.5);
+              }}
+              activeOpacity={1}
+            />
+          </View>
           <Text style={[styles.textSizeLabel, styles.textSizeLabelLarge, { color: colors.secondaryText }]}>A</Text>
         </View>
 
@@ -588,9 +610,34 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 12,
   },
-  slider: {
+  sliderTrack: {
     flex: 1,
-    height: 40,
+    height: 4,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 2,
+    position: 'relative',
+  },
+  sliderFill: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    borderRadius: 2,
+  },
+  sliderThumb: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    top: -8,
+    marginLeft: -10,
+  },
+  sliderClickArea: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: -10,
+    bottom: -10,
   },
   textSizeLabel: {
     fontSize: 16,
