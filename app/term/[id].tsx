@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   modal: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingTop: 12,
+    paddingTop: 8,
     maxHeight: '90%',
   },
   header: {
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 8,
   },
   iconButton: {
     width: 40,
