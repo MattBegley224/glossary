@@ -328,6 +328,19 @@ export default function TermDetailScreen() {
               fill={term.is_favorite ? '#F59E0B' : 'transparent'}
             />
           </TouchableOpacity>
+          {term.subjects.length > 0 && (
+            <View style={styles.subjectsContainer}>
+              {term.subjects.map((subject) => (
+                <View
+                  key={subject.id}
+                  style={[styles.subjectChip, { backgroundColor: subject.color + '20' }]}>
+                  <Text style={[styles.subjectChipText, { color: subject.color }]}>
+                    {subject.name}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
           <TouchableOpacity onPress={handleClose} style={styles.iconButton} activeOpacity={0.7}>
             <X size={24} color={colors.text} />
           </TouchableOpacity>
@@ -376,23 +389,6 @@ export default function TermDetailScreen() {
               </ScrollView>
             </Animated.View>
           </View>
-
-          {term.subjects.length > 0 && (
-            <View style={styles.subjectsSection}>
-              <Text style={[styles.sectionLabel, { color: colors.secondaryText }]}>SUBJECTS</Text>
-              <View style={styles.subjectsContainer}>
-                {term.subjects.map((subject) => (
-                  <View
-                    key={subject.id}
-                    style={[styles.subjectChip, { backgroundColor: subject.color + '20' }]}>
-                    <Text style={[styles.subjectChipText, { color: subject.color }]}>
-                      {subject.name}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
         </ScrollView>
 
         <View style={styles.footer}>
@@ -510,19 +506,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
   },
-  subjectsSection: {
-    marginBottom: 24,
-  },
-  sectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 1,
-    marginBottom: 12,
-  },
   subjectsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   subjectChip: {
     paddingHorizontal: 16,
