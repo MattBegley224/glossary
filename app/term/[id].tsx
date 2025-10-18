@@ -9,6 +9,7 @@ import {
   Platform,
   Alert,
   Share,
+  Slider,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -32,6 +33,7 @@ interface LinkedDefinitionProps {
   textColor: string;
   linkColor: string;
   needsTruncation: boolean;
+  fontSize: number;
 }
 
 function LinkedDefinition({
@@ -41,6 +43,7 @@ function LinkedDefinition({
   textColor,
   linkColor,
   needsTruncation,
+  fontSize,
 }: LinkedDefinitionProps) {
   const [showFullText, setShowFullText] = useState(false);
   const CHARACTER_LIMIT = 300;
@@ -65,7 +68,7 @@ function LinkedDefinition({
   if (showFullText || !needsTruncation) {
     return (
       <View>
-        <Text style={[styles.definition, { color: textColor }]}>
+        <Text style={[styles.definition, { color: textColor, fontSize }]}>
           {segments.map((segment, index) => {
             if (segment.isLink && segment.termId) {
               return (
@@ -117,7 +120,7 @@ function LinkedDefinition({
 
   return (
     <View>
-      <Text style={[styles.definition, { color: textColor }]}>
+      <Text style={[styles.definition, { color: textColor, fontSize }]}>
         {truncatedSegments.map((segment, index) => {
           if (segment.isLink && segment.termId) {
             return (
@@ -151,6 +154,7 @@ export default function TermDetailScreen() {
   const [allTerms, setAllTerms] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [textSizeMultiplier, setTextSizeMultiplier] = useState(1);
 
   const flipProgress = useSharedValue(0);
 
@@ -407,11 +411,27 @@ export default function TermDetailScreen() {
                   textColor={colors.text}
                   linkColor={colors.primary}
                   needsTruncation={term.definition.length > 300}
+                  fontSize={18 * textSizeMultiplier}
                 />
               </ScrollView>
             </Animated.View>
           </View>
         </ScrollView>
+
+        <View style={styles.textSizeContainer}>
+          <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={0.5}
+            maximumValue={2}
+            value={textSizeMultiplier}
+            onValueChange={setTextSizeMultiplier}
+            minimumTrackTintColor={colors.primary}
+            maximumTrackTintColor={colors.secondaryText}
+            thumbTintColor={colors.primary}
+          />
+          <Text style={[styles.textSizeLabel, styles.textSizeLabelLarge, { color: colors.secondaryText }]}>A</Text>
+        </View>
 
         <View style={styles.footer}>
           <TouchableOpacity
@@ -561,9 +581,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  textSizeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    gap: 12,
+  },
+  slider: {
+    flex: 1,
+    height: 40,
+  },
+  textSizeLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  textSizeLabelLarge: {
+    fontSize: 24,
+  },
   footer: {
     flexDirection: 'row',
     padding: 20,
+    paddingTop: 0,
     paddingBottom: 40,
     gap: 12,
   },
