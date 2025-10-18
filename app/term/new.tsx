@@ -26,22 +26,27 @@ export default function NewTermScreen() {
 
   const [name, setName] = useState('');
   const [definition, setDefinition] = useState('');
-  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>(
     params.subjectId ? [params.subjectId] : []
   );
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    loadSubjects();
+    loadCurrentSubject();
   }, []);
 
-  const loadSubjects = async () => {
+  const loadCurrentSubject = async () => {
+    if (!params.subjectId) return;
+
     try {
       const data = await database.subjects.getAll();
-      setSubjects(data);
+      const subject = data.find(s => s.id === params.subjectId);
+      if (subject) {
+        setCurrentSubject(subject);
+      }
     } catch (error) {
-      console.error('Error loading subjects:', error);
+      console.error('Error loading subject:', error);
     }
   };
 
@@ -79,15 +84,6 @@ export default function NewTermScreen() {
     }
   };
 
-  const toggleSubject = (subjectId: string) => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-
-    setSelectedSubjects((prev) =>
-      prev.includes(subjectId) ? prev.filter((id) => id !== subjectId) : [...prev, subjectId]
-    );
-  };
 
   return (
     <KeyboardAvoidingView
@@ -139,36 +135,20 @@ export default function NewTermScreen() {
             />
           </View>
 
-          <View style={styles.subjectsContainer}>
-            <Text style={[styles.label, { color: colors.text }]}>Subjects (Optional)</Text>
-            <View style={styles.subjectsGrid}>
-              {subjects.map((subject) => {
-                const isSelected = selectedSubjects.includes(subject.id);
-                return (
-                  <TouchableOpacity
-                    key={subject.id}
-                    onPress={() => toggleSubject(subject.id)}
-                    style={[
-                      styles.subjectChip,
-                      {
-                        backgroundColor: isSelected ? subject.color : colors.card,
-                        borderColor: subject.color,
-                        borderWidth: isSelected ? 0 : 1,
-                      },
-                    ]}
-                    activeOpacity={0.7}>
-                    <Text
-                      style={[
-                        styles.subjectChipText,
-                        { color: isSelected ? '#FFFFFF' : subject.color },
-                      ]}>
-                      {subject.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+          {currentSubject && (
+            <View style={styles.subjectsContainer}>
+              <Text style={[styles.label, { color: colors.text }]}>Subject</Text>
+              <View
+                style={[
+                  styles.subjectChip,
+                  { backgroundColor: currentSubject.color },
+                ]}>
+                <Text style={[styles.subjectChipText, { color: '#FFFFFF' }]}>
+                  {currentSubject.name}
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
         </ScrollView>
 
         <View style={styles.footer}>
@@ -243,11 +223,6 @@ const styles = StyleSheet.create({
   },
   subjectsContainer: {
     marginBottom: 24,
-  },
-  subjectsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
   },
   subjectChip: {
     paddingHorizontal: 16,
