@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContainer: {
-    height: 300,
+    height: 400,
     marginBottom: 24,
   },
   card: {
