@@ -336,29 +336,34 @@ export default function TermDetailScreen() {
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <TouchableOpacity onPress={handleFlip} activeOpacity={0.9}>
-            <View style={styles.cardContainer}>
-              <Animated.View
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card },
-                  frontAnimatedStyle,
-                  styles.cardFront,
-                ]}>
+          <View style={styles.cardContainer}>
+            <Animated.View
+              style={[
+                styles.card,
+                { backgroundColor: colors.card },
+                frontAnimatedStyle,
+                styles.cardFront,
+              ]}>
+              <TouchableOpacity onPress={handleFlip} activeOpacity={0.9} style={styles.cardTouchable}>
                 <Text style={[styles.cardLabel, { color: colors.secondaryText }]}>TERM</Text>
                 <Text style={[styles.termName, { color: colors.text }]}>{term.name}</Text>
                 <Text style={[styles.tapHint, { color: colors.secondaryText }]}>
                   Tap to see definition
                 </Text>
-              </Animated.View>
+              </TouchableOpacity>
+            </Animated.View>
 
-              <Animated.View
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card },
-                  backAnimatedStyle,
-                  styles.cardBack,
-                ]}>
+            <Animated.View
+              style={[
+                styles.card,
+                { backgroundColor: colors.card },
+                backAnimatedStyle,
+                styles.cardBack,
+              ]}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.cardScrollContent}
+                bounces={false}>
                 <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
                 <LinkedDefinition
                   definition={term.definition}
@@ -367,9 +372,9 @@ export default function TermDetailScreen() {
                   textColor={colors.text}
                   linkColor={colors.primary}
                 />
-              </Animated.View>
-            </View>
-          </TouchableOpacity>
+              </ScrollView>
+            </Animated.View>
+          </View>
 
           {term.subjects.length > 0 && (
             <View style={styles.subjectsSection}>
@@ -462,6 +467,18 @@ const styles = StyleSheet.create({
   },
   cardFront: {},
   cardBack: {},
+  cardTouchable: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  cardScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
   cardLabel: {
     fontSize: 12,
     fontWeight: '700',
