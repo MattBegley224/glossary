@@ -373,6 +373,7 @@ export default function TermDetailScreen() {
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
+                style={styles.cardScroll}
                 bounces={false}>
                 <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
                 <LinkedDefinition
@@ -537,13 +538,12 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
-    height: '100%',
+    minHeight: '100%',
     borderRadius: 20,
     padding: 32,
     justifyContent: 'center',
     alignItems: 'center',
     backfaceVisibility: 'hidden',
-    overflow: 'hidden',
   },
   cardFront: {},
   cardBack: {},
@@ -588,6 +588,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+  },
+  cardScroll: {
+    flex: 1,
     width: '100%',
   },
   cardScrollContent: {
