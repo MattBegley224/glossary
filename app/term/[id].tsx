@@ -486,7 +486,6 @@ const styles = StyleSheet.create({
   },
   cardScrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 4,
   },
