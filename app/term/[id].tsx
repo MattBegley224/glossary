@@ -541,12 +541,15 @@ const styles = StyleSheet.create({
     minHeight: '100%',
     borderRadius: 20,
     padding: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
     backfaceVisibility: 'hidden',
   },
-  cardFront: {},
-  cardBack: {},
+  cardFront: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardBack: {
+    flexDirection: 'column',
+  },
   cardInnerGlow: {
     position: 'absolute',
     top: 0,
