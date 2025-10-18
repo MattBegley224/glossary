@@ -538,16 +538,18 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
-    minHeight: '100%',
     borderRadius: 20,
     padding: 32,
     backfaceVisibility: 'hidden',
   },
   cardFront: {
+    minHeight: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardBack: {
+    minHeight: '100%',
+    maxHeight: '100%',
     flexDirection: 'column',
   },
   cardInnerGlow: {
@@ -598,6 +600,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScrollContent: {
+    flexGrow: 1,
     alignItems: 'center',
     paddingVertical: 40,
   },
