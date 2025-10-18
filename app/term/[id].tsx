@@ -51,7 +51,7 @@ function LinkedDefinition({
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    router.push(`/term/${termId}`);
+    router.replace(`/term/${termId}`);
   };
 
   const handleToggleText = () => {
@@ -321,20 +321,27 @@ export default function TermDetailScreen() {
 
       <View style={[styles.modal, { backgroundColor: colors.background }]}>
         <View style={styles.header}>
-          <View style={styles.difficultyContainer}>
-            {[1, 2, 3].map((level) => (
-              <TouchableOpacity
-                key={level}
-                onPress={() => handleDifficultyChange(term.difficulty === level ? 0 : level)}
-                style={styles.starButton}
-                activeOpacity={0.7}>
-                <Star
-                  size={20}
-                  color={term.difficulty >= level ? '#F59E0B' : colors.secondaryText}
-                  fill={term.difficulty >= level ? '#F59E0B' : 'transparent'}
-                />
-              </TouchableOpacity>
-            ))}
+          <View style={styles.difficultyWrapper}>
+            {term.difficulty > 0 && (
+              <Text style={[styles.difficultyLabel, { color: colors.secondaryText }]}>
+                {term.difficulty === 1 ? 'EASY' : term.difficulty === 2 ? 'HARD' : 'DIFFICULT'}
+              </Text>
+            )}
+            <View style={styles.difficultyContainer}>
+              {[1, 2, 3].map((level) => (
+                <TouchableOpacity
+                  key={level}
+                  onPress={() => handleDifficultyChange(term.difficulty === level ? 0 : level)}
+                  style={styles.starButton}
+                  activeOpacity={0.7}>
+                  <Star
+                    size={20}
+                    color={term.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                    fill={term.difficulty >= level ? '#F59E0B' : 'transparent'}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
           {term.subjects.length > 0 && (
             <View style={styles.subjectsContainer}>
@@ -459,6 +466,15 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  difficultyWrapper: {
+    alignItems: 'center',
+    gap: 2,
+  },
+  difficultyLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   difficultyContainer: {
     flexDirection: 'row',
