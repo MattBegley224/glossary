@@ -32,7 +32,6 @@ interface LinkedDefinitionProps {
   currentTermId: string;
   textColor: string;
   linkColor: string;
-  needsTruncation: boolean;
   fontSize: number;
 }
 
@@ -42,12 +41,8 @@ function LinkedDefinition({
   currentTermId,
   textColor,
   linkColor,
-  needsTruncation,
   fontSize,
 }: LinkedDefinitionProps) {
-  const [showFullText, setShowFullText] = useState(false);
-  const CHARACTER_LIMIT = 300;
-
   const segments = parseDefinitionForLinks(definition, allTerms, currentTermId);
 
   const handleTermPress = (termId: string) => {
@@ -57,71 +52,10 @@ function LinkedDefinition({
     router.replace(`/term/${termId}`);
   };
 
-  const handleToggleText = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-    setShowFullText(!showFullText);
-  };
-
-  // If showing full text or no truncation needed, render all segments
-  if (showFullText || !needsTruncation) {
-    return (
-      <View>
-        <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
-          {segments.map((segment, index) => {
-            if (segment.isLink && segment.termId) {
-              return (
-                <Text
-                  key={index}
-                  style={{ color: linkColor, textDecorationLine: 'underline' }}
-                  onPress={() => handleTermPress(segment.termId!)}>
-                  {segment.text}
-                </Text>
-              );
-            }
-            return <Text key={index}>{segment.text}</Text>;
-          })}
-        </Text>
-        {needsTruncation && (
-          <TouchableOpacity
-            onPress={handleToggleText}
-            style={styles.readMoreButton}
-            activeOpacity={0.7}>
-            <Text style={[styles.readMoreText, { color: linkColor }]}>Show Less</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  }
-
-  // Truncate segments to CHARACTER_LIMIT
-  const truncatedSegments: TextSegment[] = [];
-  let currentLength = 0;
-
-  for (const segment of segments) {
-    if (currentLength >= CHARACTER_LIMIT) break;
-
-    const remainingSpace = CHARACTER_LIMIT - currentLength;
-    if (segment.text.length <= remainingSpace) {
-      truncatedSegments.push(segment);
-      currentLength += segment.text.length;
-    } else {
-      // Truncate this segment
-      const truncatedText = segment.text.slice(0, remainingSpace).trim() + '...';
-      truncatedSegments.push({
-        ...segment,
-        text: truncatedText,
-      });
-      currentLength += truncatedText.length;
-      break;
-    }
-  }
-
   return (
     <View>
       <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
-        {truncatedSegments.map((segment, index) => {
+        {segments.map((segment, index) => {
           if (segment.isLink && segment.termId) {
             return (
               <Text
@@ -135,12 +69,6 @@ function LinkedDefinition({
           return <Text key={index}>{segment.text}</Text>;
         })}
       </Text>
-      <TouchableOpacity
-        onPress={handleToggleText}
-        style={styles.readMoreButton}
-        activeOpacity={0.7}>
-        <Text style={[styles.readMoreText, { color: linkColor }]}>Read More</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -423,16 +351,13 @@ export default function TermDetailScreen() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
                 bounces={false}>
-                {term.definition.length <= 300 && (
-                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                )}
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
                 <LinkedDefinition
                   definition={term.definition}
                   allTerms={allTerms}
                   currentTermId={term.id}
                   textColor={colors.text}
                   linkColor={colors.primary}
-                  needsTruncation={term.definition.length > 300}
                   fontSize={18 * textSizeMultiplier}
                 />
               </ScrollView>
