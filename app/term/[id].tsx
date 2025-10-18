@@ -540,6 +540,7 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
+    minHeight: 400,
     borderRadius: 20,
     padding: 32,
     backfaceVisibility: 'hidden',
@@ -550,8 +551,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    minHeight: '100%',
     flex: 1,
+    minHeight: '100%',
   },
   cardInnerGlow: {
     position: 'absolute',
@@ -597,6 +598,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScroll: {
+    flex: 1,
     width: '100%',
   },
   cardScrollContent: {
