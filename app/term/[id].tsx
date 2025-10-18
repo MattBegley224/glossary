@@ -40,6 +40,9 @@ function LinkedDefinition({
   textColor,
   linkColor,
 }: LinkedDefinitionProps) {
+  const [showFullText, setShowFullText] = useState(false);
+  const CHARACTER_LIMIT = 300;
+
   const segments = parseDefinitionForLinks(definition, allTerms, currentTermId);
 
   const handleTermPress = (termId: string) => {
@@ -49,22 +52,95 @@ function LinkedDefinition({
     router.push(`/term/${termId}`);
   };
 
+  const handleToggleText = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setShowFullText(!showFullText);
+  };
+
+  // Calculate total text length
+  const totalLength = segments.reduce((sum, segment) => sum + segment.text.length, 0);
+  const needsTruncation = totalLength > CHARACTER_LIMIT;
+
+  // If showing full text or no truncation needed, render all segments
+  if (showFullText || !needsTruncation) {
+    return (
+      <View>
+        <Text style={[styles.definition, { color: textColor }]}>
+          {segments.map((segment, index) => {
+            if (segment.isLink && segment.termId) {
+              return (
+                <Text
+                  key={index}
+                  style={{ color: linkColor, textDecorationLine: 'underline' }}
+                  onPress={() => handleTermPress(segment.termId!)}>
+                  {segment.text}
+                </Text>
+              );
+            }
+            return <Text key={index}>{segment.text}</Text>;
+          })}
+        </Text>
+        {needsTruncation && (
+          <TouchableOpacity
+            onPress={handleToggleText}
+            style={styles.readMoreButton}
+            activeOpacity={0.7}>
+            <Text style={[styles.readMoreText, { color: linkColor }]}>Show Less</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  }
+
+  // Truncate segments to CHARACTER_LIMIT
+  const truncatedSegments: TextSegment[] = [];
+  let currentLength = 0;
+
+  for (const segment of segments) {
+    if (currentLength >= CHARACTER_LIMIT) break;
+
+    const remainingSpace = CHARACTER_LIMIT - currentLength;
+    if (segment.text.length <= remainingSpace) {
+      truncatedSegments.push(segment);
+      currentLength += segment.text.length;
+    } else {
+      // Truncate this segment
+      const truncatedText = segment.text.slice(0, remainingSpace).trim() + '...';
+      truncatedSegments.push({
+        ...segment,
+        text: truncatedText,
+      });
+      currentLength += truncatedText.length;
+      break;
+    }
+  }
+
   return (
-    <Text style={[styles.definition, { color: textColor }]}>
-      {segments.map((segment, index) => {
-        if (segment.isLink && segment.termId) {
-          return (
-            <Text
-              key={index}
-              style={{ color: linkColor, textDecorationLine: 'underline' }}
-              onPress={() => handleTermPress(segment.termId!)}>
-              {segment.text}
-            </Text>
-          );
-        }
-        return <Text key={index}>{segment.text}</Text>;
-      })}
-    </Text>
+    <View>
+      <Text style={[styles.definition, { color: textColor }]}>
+        {truncatedSegments.map((segment, index) => {
+          if (segment.isLink && segment.termId) {
+            return (
+              <Text
+                key={index}
+                style={{ color: linkColor, textDecorationLine: 'underline' }}
+                onPress={() => handleTermPress(segment.termId!)}>
+                {segment.text}
+              </Text>
+            );
+          }
+          return <Text key={index}>{segment.text}</Text>;
+        })}
+      </Text>
+      <TouchableOpacity
+        onPress={handleToggleText}
+        style={styles.readMoreButton}
+        activeOpacity={0.7}>
+        <Text style={[styles.readMoreText, { color: linkColor }]}>Read More</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -402,6 +478,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 28,
     textAlign: 'center',
+  },
+  readMoreButton: {
+    marginTop: 12,
+    alignSelf: 'center',
+  },
+  readMoreText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
   tapHint: {
     fontSize: 14,
