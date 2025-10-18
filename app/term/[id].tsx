@@ -53,7 +53,7 @@ function LinkedDefinition({
   };
 
   return (
-    <View>
+    <View style={{ paddingBottom: 40 }}>
       <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
         {segments.map((segment, index) => {
           if (segment.isLink && segment.termId) {
