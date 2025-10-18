@@ -473,7 +473,13 @@ const styles = StyleSheet.create({
     backfaceVisibility: 'hidden',
   },
   cardFront: {},
-  cardBack: {},
+  cardBack: {
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
+  },
   cardTouchable: {
     flex: 1,
     justifyContent: 'center',
