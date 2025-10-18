@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContainer: {
-    height: 600,
+    minHeight: 400,
     marginBottom: 5,
   },
   card: {
@@ -591,6 +591,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
   },
