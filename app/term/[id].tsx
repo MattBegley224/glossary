@@ -511,14 +511,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 20,
+    height: 10,
   },
   glowBottom: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 20,
+    height: 10,
     transform: [{ rotate: '180deg' }],
   },
   glowLeft: {
@@ -526,14 +526,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: 20,
+    width: 10,
   },
   glowRight: {
     position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
-    width: 20,
+    width: 10,
   },
   cardTouchable: {
     flex: 1,
