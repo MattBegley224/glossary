@@ -53,23 +53,21 @@ function LinkedDefinition({
   };
 
   return (
-    <View style={{ paddingBottom: 40 }}>
-      <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
-        {segments.map((segment, index) => {
-          if (segment.isLink && segment.termId) {
-            return (
-              <Text
-                key={index}
-                style={{ color: linkColor, textDecorationLine: 'underline' }}
-                onPress={() => handleTermPress(segment.termId!)}>
-                {segment.text}
-              </Text>
-            );
-          }
-          return <Text key={index}>{segment.text}</Text>;
-        })}
-      </Text>
-    </View>
+    <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
+      {segments.map((segment, index) => {
+        if (segment.isLink && segment.termId) {
+          return (
+            <Text
+              key={index}
+              style={{ color: linkColor, textDecorationLine: 'underline' }}
+              onPress={() => handleTermPress(segment.termId!)}>
+              {segment.text}
+            </Text>
+          );
+        }
+        return <Text key={index}>{segment.text}</Text>;
+      })}
+    </Text>
   );
 }
 
