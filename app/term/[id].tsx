@@ -576,8 +576,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 0,
-    paddingBottom: 40,
+    paddingTop: 10,
+    paddingBottom: 50,
     gap: 12,
   },
   actionButton: {
