@@ -68,7 +68,7 @@ function LinkedDefinition({
   if (showFullText || !needsTruncation) {
     return (
       <View>
-        <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.6 }]}>
+        <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
           {segments.map((segment, index) => {
             if (segment.isLink && segment.termId) {
               return (
@@ -120,7 +120,7 @@ function LinkedDefinition({
 
   return (
     <View>
-      <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.6 }]}>
+      <Text style={[styles.definition, { color: textColor, fontSize, lineHeight: fontSize * 1.35 }]}>
         {truncatedSegments.map((segment, index) => {
           if (segment.isLink && segment.termId) {
             return (
