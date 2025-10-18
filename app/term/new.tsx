@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
+    alignSelf: 'flex-start',
   },
   subjectChipText: {
     fontSize: 14,
