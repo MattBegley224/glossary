@@ -23,6 +23,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { database } from '@/services/database';
+import { preferences } from '@/services/preferences';
 import { TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
 import { parseDefinitionForLinks, TextSegment } from '@/utils/termLinking';
@@ -81,7 +82,7 @@ export default function TermDetailScreen() {
   const [allTerms, setAllTerms] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [textSizeMultiplier, setTextSizeMultiplier] = useState(1);
+  const [textSizeMultiplier, setTextSizeMultiplier] = useState(preferences.getFontSizeMultiplier());
   const sliderWidth = useRef(0);
   const sliderX = useRef(0);
 
@@ -94,12 +95,16 @@ export default function TermDetailScreen() {
       onPanResponderGrant: (evt) => {
         const locationX = evt.nativeEvent.locationX;
         const percentage = Math.max(0, Math.min(1, locationX / sliderWidth.current));
-        setTextSizeMultiplier(0.5 + percentage * 1.5);
+        const newMultiplier = 0.5 + percentage * 1.5;
+        setTextSizeMultiplier(newMultiplier);
+        preferences.setFontSizeMultiplier(newMultiplier);
       },
       onPanResponderMove: (evt, gestureState) => {
         const x = gestureState.moveX - sliderX.current;
         const percentage = Math.max(0, Math.min(1, x / sliderWidth.current));
-        setTextSizeMultiplier(0.5 + percentage * 1.5);
+        const newMultiplier = 0.5 + percentage * 1.5;
+        setTextSizeMultiplier(newMultiplier);
+        preferences.setFontSizeMultiplier(newMultiplier);
       },
     })
   ).current;
