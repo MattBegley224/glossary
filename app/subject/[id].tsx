@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star } from 'lucide-react-native';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { database } from '@/services/database';
@@ -38,6 +38,7 @@ export default function SubjectDetailScreen() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(params.name || '');
   const [currentName, setCurrentName] = useState(params.name || '');
+  const [sortBy, setSortBy] = useState<'name' | 'difficulty'>('name');
 
   console.log('🔍 Render state - isEditingName:', isEditingName, 'editedName:', editedName);
 
@@ -62,7 +63,7 @@ export default function SubjectDetailScreen() {
 
   useEffect(() => {
     filterTerms();
-  }, [searchQuery, terms]);
+  }, [searchQuery, terms, sortBy]);
 
   const loadTerms = async () => {
     if (!params.id) return;
@@ -79,18 +80,33 @@ export default function SubjectDetailScreen() {
   };
 
   const filterTerms = () => {
-    if (!searchQuery.trim()) {
-      setFilteredTerms(terms);
-      return;
+    let filtered = terms;
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = terms.filter(
+        (term) =>
+          term.name.toLowerCase().includes(query) ||
+          term.definition.toLowerCase().includes(query)
+      );
     }
 
-    const query = searchQuery.toLowerCase();
-    const filtered = terms.filter(
-      (term) =>
-        term.name.toLowerCase().includes(query) ||
-        term.definition.toLowerCase().includes(query)
-    );
-    setFilteredTerms(filtered);
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return (b.difficulty ?? 0) - (a.difficulty ?? 0);
+      }
+    });
+
+    setFilteredTerms(sorted);
+  };
+
+  const toggleSort = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setSortBy(sortBy === 'name' ? 'difficulty' : 'name');
   };
 
   const handleRefresh = () => {
@@ -263,15 +279,26 @@ export default function SubjectDetailScreen() {
           )}
         </View>
 
-        <View style={[styles.searchContainer, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-          <Search size={20} color="#FFFFFF" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search terms..."
-            placeholderTextColor="rgba(255, 255, 255, 0.7)"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+        <View style={styles.controlsRow}>
+          <View style={[styles.searchContainer, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+            <Search size={20} color="#FFFFFF" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search terms..."
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={toggleSort}
+            style={styles.sortButton}
+            activeOpacity={0.7}>
+            <ArrowUpDown size={18} color="#FFFFFF" />
+            <Text style={styles.sortButtonText}>
+              {sortBy === 'name' ? 'Name' : 'Difficulty'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -343,13 +370,33 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
   },
+  controlsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'center',
+  },
   searchContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
     gap: 12,
+  },
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    gap: 6,
+  },
+  sortButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   searchInput: {
     flex: 1,
