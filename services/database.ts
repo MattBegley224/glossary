@@ -12,6 +12,7 @@ function mapTermFromDb(dbTerm: any): Term {
     name: dbTerm.term_name,
     definition: dbTerm.definition,
     is_favorite: dbTerm.is_favorite,
+    difficulty: dbTerm.difficulty ?? 0,
     created_at: dbTerm.created_at,
     updated_at: dbTerm.updated_at,
   };
@@ -85,6 +86,7 @@ export const database = {
           term_name,
           definition,
           is_favorite,
+          difficulty,
           created_at,
           updated_at,
           term_subjects(
@@ -109,6 +111,7 @@ export const database = {
           term_name,
           definition,
           is_favorite,
+          difficulty,
           created_at,
           updated_at,
           term_subjects!inner(
@@ -135,6 +138,7 @@ export const database = {
           term_name,
           definition,
           is_favorite,
+          difficulty,
           created_at,
           updated_at,
           term_subjects(
@@ -160,6 +164,7 @@ export const database = {
           term_name,
           definition,
           is_favorite,
+          difficulty,
           created_at,
           updated_at,
           term_subjects(
@@ -183,7 +188,7 @@ export const database = {
       const { data: term, error: termError } = await supabase
         .from('terms')
         .insert({ term_name: name, definition })
-        .select('id, term_name, definition, is_favorite, created_at, updated_at')
+        .select('id, term_name, definition, is_favorite, difficulty, created_at, updated_at')
         .single();
 
       if (termError) throw termError;
@@ -214,7 +219,7 @@ export const database = {
         .from('terms')
         .update({ term_name: name, definition, updated_at: new Date().toISOString() })
         .eq('id', id)
-        .select('id, term_name, definition, is_favorite, created_at, updated_at')
+        .select('id, term_name, definition, is_favorite, difficulty, created_at, updated_at')
         .single();
 
       if (termError) throw termError;
@@ -246,6 +251,15 @@ export const database = {
       const { error } = await supabase
         .from('terms')
         .update({ is_favorite: isFavorite })
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+
+    async updateDifficulty(id: string, difficulty: number): Promise<void> {
+      const { error } = await supabase
+        .from('terms')
+        .update({ difficulty })
         .eq('id', id);
 
       if (error) throw error;

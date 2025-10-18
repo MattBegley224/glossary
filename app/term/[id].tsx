@@ -203,7 +203,7 @@ export default function TermDetailScreen() {
     flipProgress.value = withTiming(isFlipped ? 0 : 1, { duration: 300 });
   };
 
-  const handleToggleFavorite = async () => {
+  const handleDifficultyChange = async (difficulty: number) => {
     if (!term) return;
 
     if (Platform.OS !== 'web') {
@@ -211,11 +211,11 @@ export default function TermDetailScreen() {
     }
 
     try {
-      await database.terms.toggleFavorite(term.id, !term.is_favorite);
-      setTerm({ ...term, is_favorite: !term.is_favorite });
+      await database.terms.updateDifficulty(term.id, difficulty);
+      setTerm({ ...term, difficulty });
     } catch (error) {
-      console.error('Error toggling favorite:', error);
-      Alert.alert('Error', 'Failed to update favorite');
+      console.error('Error updating difficulty:', error);
+      Alert.alert('Error', 'Failed to update difficulty');
     }
   };
 
@@ -321,13 +321,21 @@ export default function TermDetailScreen() {
 
       <View style={[styles.modal, { backgroundColor: colors.background }]}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleToggleFavorite} style={styles.iconButton} activeOpacity={0.7}>
-            <Star
-              size={24}
-              color={term.is_favorite ? '#F59E0B' : colors.secondaryText}
-              fill={term.is_favorite ? '#F59E0B' : 'transparent'}
-            />
-          </TouchableOpacity>
+          <View style={styles.difficultyContainer}>
+            {[1, 2, 3].map((level) => (
+              <TouchableOpacity
+                key={level}
+                onPress={() => handleDifficultyChange(term.difficulty === level ? 0 : level)}
+                style={styles.starButton}
+                activeOpacity={0.7}>
+                <Star
+                  size={20}
+                  color={term.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                  fill={term.difficulty >= level ? '#F59E0B' : 'transparent'}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
           {term.subjects.length > 0 && (
             <View style={styles.subjectsContainer}>
               {term.subjects.map((subject) => (
@@ -451,6 +459,13 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  difficultyContainer: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  starButton: {
+    padding: 4,
   },
   content: {
     paddingHorizontal: 20,

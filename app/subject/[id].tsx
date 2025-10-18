@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X } from 'lucide-react-native';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { database } from '@/services/database';
@@ -192,7 +192,21 @@ export default function SubjectDetailScreen() {
       onPress={() => handleTermPress(item)}
       style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
+      <View style={styles.cardHeader}>
+        <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
+        {item.difficulty > 0 && (
+          <View style={styles.difficultyContainer}>
+            {[1, 2, 3].map((level) => (
+              <Star
+                key={level}
+                size={14}
+                color={item.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                fill={item.difficulty >= level ? '#F59E0B' : 'transparent'}
+              />
+            ))}
+          </View>
+        )}
+      </View>
     </AnimatedTouchable>
   );
 
@@ -355,10 +369,20 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   termName: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
+    flex: 1,
+  },
+  difficultyContainer: {
+    flexDirection: 'row',
+    gap: 2,
+    marginLeft: 8,
   },
   definition: {
     fontSize: 15,

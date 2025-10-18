@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Search, BookOpen } from 'lucide-react-native';
+import { Search, BookOpen, Star, ArrowUpDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { router, useFocusEffect } from 'expo-router';
@@ -30,6 +30,7 @@ export default function AllTermsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [sortBy, setSortBy] = useState<'name' | 'difficulty'>('name');
 
   useEffect(() => {
     loadTerms();
@@ -43,7 +44,7 @@ export default function AllTermsScreen() {
 
   useEffect(() => {
     filterTerms();
-  }, [searchQuery, terms]);
+  }, [searchQuery, terms, sortBy]);
 
   const loadTerms = async () => {
     try {
@@ -58,18 +59,33 @@ export default function AllTermsScreen() {
   };
 
   const filterTerms = () => {
-    if (!searchQuery.trim()) {
-      setFilteredTerms(terms);
-      return;
+    let filtered = terms;
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = terms.filter(
+        (term) =>
+          term.name.toLowerCase().includes(query) ||
+          term.definition.toLowerCase().includes(query)
+      );
     }
 
-    const query = searchQuery.toLowerCase();
-    const filtered = terms.filter(
-      (term) =>
-        term.name.toLowerCase().includes(query) ||
-        term.definition.toLowerCase().includes(query)
-    );
-    setFilteredTerms(filtered);
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return (b.difficulty ?? 0) - (a.difficulty ?? 0);
+      }
+    });
+
+    setFilteredTerms(sorted);
+  };
+
+  const toggleSort = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setSortBy(sortBy === 'name' ? 'difficulty' : 'name');
   };
 
   const handleRefresh = () => {
@@ -95,7 +111,21 @@ export default function AllTermsScreen() {
       onPress={() => handleTermPress(item)}
       style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
+      <View style={styles.cardHeader}>
+        <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
+        {item.difficulty > 0 && (
+          <View style={styles.difficultyContainer}>
+            {[1, 2, 3].map((level) => (
+              <Star
+                key={level}
+                size={14}
+                color={item.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                fill={item.difficulty >= level ? '#F59E0B' : 'transparent'}
+              />
+            ))}
+          </View>
+        )}
+      </View>
       {item.subjects.length > 0 && (
         <View style={styles.subjectsContainer}>
           {item.subjects.map((subject) => (
@@ -131,7 +161,18 @@ export default function AllTermsScreen() {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>All Terms</Text>
+        <View style={styles.headerTop}>
+          <Text style={[styles.title, { color: colors.text }]}>All Terms</Text>
+          <TouchableOpacity
+            onPress={toggleSort}
+            style={[styles.sortButton, { backgroundColor: colors.card }]}
+            activeOpacity={0.7}>
+            <ArrowUpDown size={18} color={colors.primary} />
+            <Text style={[styles.sortButtonText, { color: colors.primary }]}>
+              {sortBy === 'name' ? 'Name' : 'Difficulty'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
           <Search size={20} color={colors.secondaryText} />
@@ -168,11 +209,28 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 20,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
-    marginBottom: 16,
+  },
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  sortButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -199,10 +257,21 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   termName: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
+    flex: 1,
+  },
+  difficultyContainer: {
+    flexDirection: 'row',
+    gap: 2,
+    marginLeft: 8,
   },
   definition: {
     fontSize: 15,

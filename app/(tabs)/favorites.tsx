@@ -75,7 +75,18 @@ export default function FavoritesScreen() {
       activeOpacity={0.7}>
       <View style={styles.cardHeader}>
         <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
-        <Star size={20} color="#F59E0B" fill="#F59E0B" />
+        {item.difficulty > 0 && (
+          <View style={styles.difficultyContainer}>
+            {[1, 2, 3].map((level) => (
+              <Star
+                key={level}
+                size={16}
+                color={item.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                fill={item.difficulty >= level ? '#F59E0B' : 'transparent'}
+              />
+            ))}
+          </View>
+        )}
       </View>
       {item.subjects.length > 0 && (
         <View style={styles.subjectsContainer}>
@@ -155,7 +166,7 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 12,
   },
   cardContent: {
@@ -165,7 +176,12 @@ const styles = StyleSheet.create({
   termName: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
+    flex: 1,
+  },
+  difficultyContainer: {
+    flexDirection: 'row',
+    gap: 2,
+    marginLeft: 8,
   },
   definition: {
     fontSize: 15,

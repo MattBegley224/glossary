@@ -10,6 +10,7 @@ export interface Term {
   name: string;
   definition: string;
   is_favorite: boolean;
+  difficulty: number;
   created_at: string;
   updated_at: string;
 }
