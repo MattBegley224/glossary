@@ -339,7 +339,7 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 2 },
+                { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 1 },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
