@@ -483,9 +483,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScrollContent: {
-    flexGrow: 1,
     alignItems: 'center',
-    paddingVertical: 4,
+    paddingVertical: 20,
   },
   cardLabel: {
     fontSize: 12,
