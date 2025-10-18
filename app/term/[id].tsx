@@ -537,6 +537,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
+    marginTop: 20,
     gap: 12,
   },
   sliderTrack: {
@@ -578,7 +579,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 10,
     paddingBottom: 40,
-    marginTop: 10,
+    marginTop: 20,
     gap: 12,
   },
   actionButton: {
