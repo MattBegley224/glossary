@@ -31,6 +31,7 @@ interface LinkedDefinitionProps {
   currentTermId: string;
   textColor: string;
   linkColor: string;
+  onExpandChange?: (isExpanded: boolean) => void;
 }
 
 function LinkedDefinition({
@@ -39,6 +40,7 @@ function LinkedDefinition({
   currentTermId,
   textColor,
   linkColor,
+  onExpandChange,
 }: LinkedDefinitionProps) {
   const [showFullText, setShowFullText] = useState(false);
   const CHARACTER_LIMIT = 300;
@@ -56,7 +58,9 @@ function LinkedDefinition({
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    setShowFullText(!showFullText);
+    const newValue = !showFullText;
+    setShowFullText(newValue);
+    onExpandChange?.(newValue);
   };
 
   // Calculate total text length
@@ -153,6 +157,7 @@ export default function TermDetailScreen() {
   const [allTerms, setAllTerms] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const flipProgress = useSharedValue(0);
 
@@ -364,13 +369,16 @@ export default function TermDetailScreen() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
                 bounces={false}>
-                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                {!isExpanded && (
+                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                )}
                 <LinkedDefinition
                   definition={term.definition}
                   allTerms={allTerms}
                   currentTermId={term.id}
                   textColor={colors.text}
                   linkColor={colors.primary}
+                  onExpandChange={setIsExpanded}
                 />
               </ScrollView>
             </Animated.View>
