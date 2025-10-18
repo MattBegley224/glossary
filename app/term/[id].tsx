@@ -619,7 +619,7 @@ const styles = StyleSheet.create({
   definition: {
     fontSize: 18,
     lineHeight: 28,
-    textAlign: 'left',
+    textAlign: 'center',
     width: '100%',
     paddingHorizontal: 8,
   },
