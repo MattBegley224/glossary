@@ -343,18 +343,28 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <LinearGradient
-                colors={[
-                  'rgba(59, 130, 246, 0.4)',
-                  'rgba(59, 130, 246, 0.2)',
-                  'rgba(59, 130, 246, 0)',
-                  'rgba(59, 130, 246, 0)',
-                ]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.cardInnerGlow}
-                pointerEvents="none"
-              />
+              <View style={styles.cardInnerGlow} pointerEvents="none">
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowTop}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowBottom}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.glowLeft}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  style={styles.glowRight}
+                />
+              </View>
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
@@ -495,6 +505,35 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     borderRadius: 20,
+  },
+  glowTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+  },
+  glowBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+    transform: [{ rotate: '180deg' }],
+  },
+  glowLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 20,
+  },
+  glowRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 20,
   },
   cardTouchable: {
     flex: 1,
