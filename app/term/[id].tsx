@@ -91,7 +91,9 @@ export default function TermDetailScreen() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
       onPanResponderGrant: (evt) => {
         const locationX = evt.nativeEvent.locationX;
         const percentage = Math.max(0, Math.min(1, locationX / sliderWidth.current));
@@ -106,6 +108,7 @@ export default function TermDetailScreen() {
         setTextSizeMultiplier(newMultiplier);
         preferences.setFontSizeMultiplier(newMultiplier);
       },
+      onPanResponderTerminationRequest: () => false,
     })
   ).current;
 
@@ -616,7 +619,9 @@ const styles = StyleSheet.create({
   definition: {
     fontSize: 18,
     lineHeight: 28,
-    textAlign: 'center',
+    textAlign: 'left',
+    width: '100%',
+    paddingHorizontal: 8,
   },
   readMoreButton: {
     marginTop: 12,
