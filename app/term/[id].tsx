@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Platform,
   Alert,
   Share,
+  PanResponder,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -154,8 +155,27 @@ export default function TermDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
   const [textSizeMultiplier, setTextSizeMultiplier] = useState(1);
+  const sliderWidth = useRef(0);
+  const sliderX = useRef(0);
 
   const flipProgress = useSharedValue(0);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: (evt) => {
+        const locationX = evt.nativeEvent.locationX;
+        const percentage = Math.max(0, Math.min(1, locationX / sliderWidth.current));
+        setTextSizeMultiplier(0.5 + percentage * 1.5);
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        const x = gestureState.moveX - sliderX.current;
+        const percentage = Math.max(0, Math.min(1, x / sliderWidth.current));
+        setTextSizeMultiplier(0.5 + percentage * 1.5);
+      },
+    })
+  ).current;
 
   useEffect(() => {
     loadTerm();
@@ -419,37 +439,18 @@ export default function TermDetailScreen() {
 
         <View style={styles.textSizeContainer}>
           <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
-          <View style={styles.sliderTrack}>
+          <View
+            style={styles.sliderTrack}
+            onLayout={(e) => {
+              sliderWidth.current = e.nativeEvent.layout.width;
+              e.nativeEvent.target.measureInWindow((x: number) => {
+                sliderX.current = x;
+              });
+            }}
+            {...panResponder.panHandlers}>
             <View style={[styles.sliderFill, { width: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]} />
-            <TouchableOpacity
+            <View
               style={[styles.sliderThumb, { left: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]}
-              onPressIn={(e) => {
-                const target = e.currentTarget;
-                const handleMove = (moveEvent: any) => {
-                  const containerWidth = target.parentElement?.offsetWidth || 300;
-                  const x = moveEvent.clientX - (target.parentElement?.getBoundingClientRect().left || 0);
-                  const percentage = Math.max(0, Math.min(1, x / containerWidth));
-                  setTextSizeMultiplier(0.5 + percentage * 1.5);
-                };
-                const handleEnd = () => {
-                  document.removeEventListener('mousemove', handleMove);
-                  document.removeEventListener('mouseup', handleEnd);
-                };
-                document.addEventListener('mousemove', handleMove);
-                document.addEventListener('mouseup', handleEnd);
-              }}
-              activeOpacity={0.8}
-            />
-            <TouchableOpacity
-              style={styles.sliderClickArea}
-              onPress={(e) => {
-                const target = e.currentTarget as any;
-                const containerWidth = target.offsetWidth;
-                const x = e.nativeEvent.locationX;
-                const percentage = Math.max(0, Math.min(1, x / containerWidth));
-                setTextSizeMultiplier(0.5 + percentage * 1.5);
-              }}
-              activeOpacity={1}
             />
           </View>
           <Text style={[styles.textSizeLabel, styles.textSizeLabelLarge, { color: colors.secondaryText }]}>A</Text>
@@ -631,13 +632,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     top: -8,
     marginLeft: -10,
-  },
-  sliderClickArea: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: -10,
-    bottom: -10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   textSizeLabel: {
     fontSize: 16,
