@@ -89,10 +89,7 @@ export default function TermDetailScreen() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-      onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: (evt) => {
         const locationX = evt.nativeEvent.locationX;
         const percentage = Math.max(0, Math.min(1, locationX / sliderWidth.current));
@@ -444,6 +441,7 @@ const styles = StyleSheet.create({
     left: 20,
     alignItems: 'center',
     gap: 2,
+    zIndex: 10,
   },
   difficultyLabel: {
     fontSize: 10,
