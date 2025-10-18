@@ -458,8 +458,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContainer: {
-    height: 550,
-    marginBottom: 10,
+    height: 600,
+    marginBottom: 5,
   },
   card: {
     position: 'absolute',
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    marginTop: 10,
+    marginTop: 5,
     gap: 12,
   },
   sliderTrack: {
@@ -577,9 +577,9 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 10,
+    paddingTop: 5,
     paddingBottom: 40,
-    marginTop: 10,
+    marginTop: 5,
     gap: 12,
   },
   actionButton: {
