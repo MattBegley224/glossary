@@ -347,7 +347,7 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { backgroundColor: colors.card, borderColor: colors.primary, borderWidth: 1 },
+                { borderColor: colors.primary, borderWidth: 1 },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
@@ -373,20 +373,22 @@ export default function TermDetailScreen() {
                   style={styles.glowRight}
                 />
               </View>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.cardScrollContent}
-                style={styles.cardScroll}>
-                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                <LinkedDefinition
-                  definition={term.definition}
-                  allTerms={allTerms}
-                  currentTermId={term.id}
-                  textColor={colors.text}
-                  linkColor={colors.primary}
-                  fontSize={18 * textSizeMultiplier}
-                />
-              </ScrollView>
+              <View style={[styles.cardContentWrapper, { backgroundColor: colors.card }]}>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.cardScrollContent}
+                  style={styles.cardScroll}>
+                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                  <LinkedDefinition
+                    definition={term.definition}
+                    allTerms={allTerms}
+                    currentTermId={term.id}
+                    textColor={colors.text}
+                    linkColor={colors.primary}
+                    fontSize={18 * textSizeMultiplier}
+                  />
+                </ScrollView>
+              </View>
             </Animated.View>
           </View>
         </ScrollView>
@@ -540,10 +542,10 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
-    minHeight: 400,
+    height: 350,
     borderRadius: 20,
-    padding: 32,
     backfaceVisibility: 'hidden',
+    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -551,8 +553,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    flex: 1,
-    minHeight: '100%',
+    height: '100%',
   },
   cardInnerGlow: {
     position: 'absolute',
@@ -596,6 +597,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+  cardContentWrapper: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   cardScroll: {
     flex: 1,
