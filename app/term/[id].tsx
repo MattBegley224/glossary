@@ -342,20 +342,22 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.cardScrollContent}
-                bounces={false}>
-                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                <LinkedDefinition
-                  definition={term.definition}
-                  allTerms={allTerms}
-                  currentTermId={term.id}
-                  textColor={colors.text}
-                  linkColor={colors.primary}
-                  fontSize={18 * textSizeMultiplier}
-                />
-              </ScrollView>
+              <View style={styles.glowBorder}>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.cardScrollContent}
+                  bounces={false}>
+                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                  <LinkedDefinition
+                    definition={term.definition}
+                    allTerms={allTerms}
+                    currentTermId={term.id}
+                    textColor={colors.text}
+                    linkColor={colors.primary}
+                    fontSize={18 * textSizeMultiplier}
+                  />
+                </ScrollView>
+              </View>
             </Animated.View>
           </View>
         </ScrollView>
@@ -474,6 +476,18 @@ const styles = StyleSheet.create({
   },
   cardFront: {},
   cardBack: {},
+  glowBorder: {
+    flex: 1,
+    margin: 20,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'rgba(59, 130, 246, 0.8)',
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    overflow: 'hidden',
+  },
   cardTouchable: {
     flex: 1,
     justifyContent: 'center',
