@@ -347,33 +347,33 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { borderColor: colors.primary, borderWidth: 1 },
+                { borderColor: colors.primary, borderWidth: 1, backgroundColor: colors.card },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.cardInnerGlow} pointerEvents="none">
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  style={styles.glowTop}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  style={styles.glowBottom}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.glowLeft}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 0, y: 0 }}
-                  style={styles.glowRight}
-                />
-              </View>
-              <View style={[styles.cardContentWrapper, { backgroundColor: colors.card }]}>
+              <View style={styles.cardContentWrapper}>
+                <View style={styles.cardInnerGlow} pointerEvents="none">
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    style={styles.glowTop}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    style={styles.glowBottom}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.glowLeft}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.glowRight}
+                  />
+                </View>
                 <ScrollView
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={styles.cardScrollContent}
@@ -545,6 +545,7 @@ const styles = StyleSheet.create({
     height: 350,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
+    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -599,8 +600,6 @@ const styles = StyleSheet.create({
   },
   cardContentWrapper: {
     flex: 1,
-    borderRadius: 20,
-    overflow: 'hidden',
     padding: 20,
   },
   cardScroll: {
