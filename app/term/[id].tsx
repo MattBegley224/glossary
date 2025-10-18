@@ -234,7 +234,7 @@ export default function TermDetailScreen() {
                   backAnimatedStyle,
                   styles.cardBack,
                 ]}>
-                <Text style={[styles.cardLabel, { color: colors.secondaryText }]}>DEFINITION</Text>
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
                 <Text style={[styles.definition, { color: colors.text }]}>{term.definition}</Text>
               </Animated.View>
             </View>
