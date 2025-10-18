@@ -269,6 +269,7 @@ export default function TermDetailScreen() {
       <TouchableOpacity style={styles.backdrop} onPress={handleClose} activeOpacity={1} />
 
       <View style={[styles.modal, { backgroundColor: colors.background }]}>
+        <View style={styles.modalGlowBorder} />
         <View style={styles.header}>
           <View style={styles.difficultyWrapper}>
             {term.difficulty > 0 && (
@@ -342,22 +343,20 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.glowBorder}>
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.cardScrollContent}
-                  bounces={false}>
-                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                  <LinkedDefinition
-                    definition={term.definition}
-                    allTerms={allTerms}
-                    currentTermId={term.id}
-                    textColor={colors.text}
-                    linkColor={colors.primary}
-                    fontSize={18 * textSizeMultiplier}
-                  />
-                </ScrollView>
-              </View>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.cardScrollContent}
+                bounces={false}>
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                <LinkedDefinition
+                  definition={term.definition}
+                  allTerms={allTerms}
+                  currentTermId={term.id}
+                  textColor={colors.text}
+                  linkColor={colors.primary}
+                  fontSize={18 * textSizeMultiplier}
+                />
+              </ScrollView>
             </Animated.View>
           </View>
         </ScrollView>
@@ -420,6 +419,23 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingTop: 0,
     height: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  modalGlowBorder: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    borderRadius: 24,
+    borderWidth: 2,
+    borderColor: 'rgba(59, 130, 246, 0.8)',
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    pointerEvents: 'none',
   },
   header: {
     flexDirection: 'row',
@@ -476,18 +492,6 @@ const styles = StyleSheet.create({
   },
   cardFront: {},
   cardBack: {},
-  glowBorder: {
-    flex: 1,
-    margin: 20,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'rgba(59, 130, 246, 0.8)',
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    overflow: 'hidden',
-  },
   cardTouchable: {
     flex: 1,
     justifyContent: 'center',
