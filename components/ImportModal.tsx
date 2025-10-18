@@ -102,23 +102,34 @@ export function ImportModal({ visible, onClose, onImportSuccess, subjectId, subj
     try {
       let successCount = 0;
       let failCount = 0;
+      let duplicateCount = 0;
 
       for (const term of preview) {
         try {
           await database.terms.create(term.name, term.definition, [subjectId]);
           successCount++;
         } catch (error) {
-          console.error(`Error importing term "${term.name}":`, error);
-          failCount++;
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          if (errorMessage.includes('already exists')) {
+            console.log(`Skipping duplicate term "${term.name}"`);
+            duplicateCount++;
+          } else {
+            console.error(`Error importing term "${term.name}":`, error);
+            failCount++;
+          }
         }
       }
 
-      if (successCount > 0) {
+      if (successCount > 0 || duplicateCount > 0) {
         onImportSuccess();
-        Alert.alert(
-          'Import Complete',
-          `Successfully imported ${successCount} term${successCount === 1 ? '' : 's'}${failCount > 0 ? `\n${failCount} failed` : ''}`
-        );
+        const message = [
+          successCount > 0 ? `Successfully imported ${successCount} term${successCount === 1 ? '' : 's'}` : '',
+          duplicateCount > 0 ? `${duplicateCount} duplicate${duplicateCount === 1 ? '' : 's'} skipped` : '',
+          failCount > 0 ? `${failCount} failed` : '',
+        ]
+          .filter(Boolean)
+          .join('\n');
+        Alert.alert('Import Complete', message);
         onClose();
       } else {
         Alert.alert('Import Failed', 'No terms could be imported');

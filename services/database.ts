@@ -185,6 +185,11 @@ export const database = {
     },
 
     async create(name: string, definition: string, subjectIds: string[]): Promise<Term> {
+      const existingTerm = await this.findByName(name);
+      if (existingTerm) {
+        throw new Error(`A term with the name "${name}" already exists`);
+      }
+
       const { data: term, error: termError } = await supabase
         .from('terms')
         .insert({ term_name: name, definition })
@@ -209,12 +214,28 @@ export const database = {
       return mappedTerm;
     },
 
+    async findByName(name: string): Promise<Term | null> {
+      const { data, error } = await supabase
+        .from('terms')
+        .select('id, term_name, definition, is_favorite, difficulty, created_at, updated_at')
+        .ilike('term_name', name)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data ? mapTermFromDb(data) : null;
+    },
+
     async update(
       id: string,
       name: string,
       definition: string,
       subjectIds: string[]
     ): Promise<Term> {
+      const existingTerm = await this.findByName(name);
+      if (existingTerm && existingTerm.id !== id) {
+        throw new Error(`A term with the name "${name}" already exists`);
+      }
+
       const { data: term, error: termError } = await supabase
         .from('terms')
         .update({ term_name: name, definition, updated_at: new Date().toISOString() })
