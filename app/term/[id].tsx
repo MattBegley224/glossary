@@ -595,10 +595,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardScrollContent: {
-    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
+    minHeight: '100%',
   },
   cardLabel: {
     fontSize: 12,
