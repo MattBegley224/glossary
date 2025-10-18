@@ -407,6 +407,28 @@ export default function TermDetailScreen() {
             style={[styles.actionButton, { backgroundColor: colors.card }]}
             onPress={handleEdit}
             activeOpacity={0.7}>
+            <View style={styles.buttonGlow} pointerEvents="none">
+              <LinearGradient
+                colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                style={styles.buttonGlowTop}
+              />
+              <LinearGradient
+                colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                style={styles.buttonGlowBottom}
+              />
+              <LinearGradient
+                colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.buttonGlowLeft}
+              />
+              <LinearGradient
+                colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                style={styles.buttonGlowRight}
+              />
+            </View>
             <Edit2 size={20} color={colors.primary} />
             <Text style={[styles.actionButtonText, { color: colors.primary }]}>Edit</Text>
           </TouchableOpacity>
@@ -415,6 +437,28 @@ export default function TermDetailScreen() {
             style={[styles.actionButton, { backgroundColor: colors.card }]}
             onPress={handleDelete}
             activeOpacity={0.7}>
+            <View style={styles.buttonGlow} pointerEvents="none">
+              <LinearGradient
+                colors={['rgba(239, 68, 68, 0.5)', 'rgba(239, 68, 68, 0)']}
+                style={styles.buttonGlowTop}
+              />
+              <LinearGradient
+                colors={['rgba(239, 68, 68, 0.5)', 'rgba(239, 68, 68, 0)']}
+                style={styles.buttonGlowBottom}
+              />
+              <LinearGradient
+                colors={['rgba(239, 68, 68, 0.5)', 'rgba(239, 68, 68, 0)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.buttonGlowLeft}
+              />
+              <LinearGradient
+                colors={['rgba(239, 68, 68, 0.5)', 'rgba(239, 68, 68, 0)']}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                style={styles.buttonGlowRight}
+              />
+            </View>
             <Trash2 size={20} color={colors.error} />
             <Text style={[styles.actionButtonText, { color: colors.error }]}>Delete</Text>
           </TouchableOpacity>
@@ -650,6 +694,44 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     gap: 8,
+    overflow: 'hidden',
+  },
+  buttonGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 12,
+  },
+  buttonGlowTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 15,
+  },
+  buttonGlowBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 15,
+    transform: [{ rotate: '180deg' }],
+  },
+  buttonGlowLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 15,
+  },
+  buttonGlowRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 15,
   },
   actionButtonText: {
     fontSize: 15,
