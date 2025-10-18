@@ -11,6 +11,7 @@ import {
   Share,
   PanResponder,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { X, Star, Edit2, Share2, Trash2 } from 'lucide-react-native';
@@ -342,7 +343,18 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.cardInnerGlow} />
+              <LinearGradient
+                colors={[
+                  'rgba(59, 130, 246, 0.4)',
+                  'rgba(59, 130, 246, 0.2)',
+                  'rgba(59, 130, 246, 0)',
+                  'rgba(59, 130, 246, 0)',
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.cardInnerGlow}
+                pointerEvents="none"
+              />
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
@@ -483,13 +495,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'rgba(59, 130, 246, 0.8)',
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    pointerEvents: 'none',
   },
   cardTouchable: {
     flex: 1,
