@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
+    flexShrink: 0,
   },
   sortButtonText: {
     fontSize: 14,
@@ -239,6 +240,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     gap: 12,
+    flexShrink: 0,
   },
   searchInput: {
     flex: 1,
