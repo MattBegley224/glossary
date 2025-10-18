@@ -342,6 +342,7 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
+              <View style={styles.cardInnerGlow} />
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardScrollContent}
@@ -471,9 +472,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backfaceVisibility: 'hidden',
+    overflow: 'hidden',
   },
   cardFront: {},
   cardBack: {},
+  cardInnerGlow: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'rgba(59, 130, 246, 0.8)',
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    pointerEvents: 'none',
+  },
   cardTouchable: {
     flex: 1,
     justifyContent: 'center',
