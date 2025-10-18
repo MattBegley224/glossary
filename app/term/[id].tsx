@@ -342,23 +342,20 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.innerGlowContainer}>
-                <View style={styles.innerGlow} />
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.cardScrollContent}
-                  bounces={false}>
-                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                  <LinkedDefinition
-                    definition={term.definition}
-                    allTerms={allTerms}
-                    currentTermId={term.id}
-                    textColor={colors.text}
-                    linkColor={colors.primary}
-                    fontSize={18 * textSizeMultiplier}
-                  />
-                </ScrollView>
-              </View>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.cardScrollContent}
+                bounces={false}>
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                <LinkedDefinition
+                  definition={term.definition}
+                  allTerms={allTerms}
+                  currentTermId={term.id}
+                  textColor={colors.text}
+                  linkColor={colors.primary}
+                  fontSize={18 * textSizeMultiplier}
+                />
+              </ScrollView>
             </Animated.View>
           </View>
         </ScrollView>
@@ -477,27 +474,6 @@ const styles = StyleSheet.create({
   },
   cardFront: {},
   cardBack: {},
-  innerGlowContainer: {
-    flex: 1,
-    width: '100%',
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  innerGlow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: 'rgba(59, 130, 246, 0.6)',
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 36,
-    zIndex: 1,
-  },
   cardTouchable: {
     flex: 1,
     justifyContent: 'center',
