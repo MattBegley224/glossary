@@ -269,16 +269,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
-    borderRadius: 32,
+    minHeight: 80,
     overflow: 'hidden',
   },
   buttonBackground: {
     paddingHorizontal: 24,
     paddingVertical: 16,
-    minHeight: 64,
+    flex: 1,
   },
   buttonImage: {
-    borderRadius: 32,
+    width: '100%',
+    height: '100%',
   },
   cardContent: {
     gap: 8,

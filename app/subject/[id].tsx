@@ -421,8 +421,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
-    height: 64,
-    borderRadius: 32,
+    height: 72,
     overflow: 'hidden',
   },
   buttonBackground: {
@@ -431,7 +430,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonImage: {
-    borderRadius: 32,
+    width: '100%',
+    height: '100%',
   },
   cardHeader: {
     flexDirection: 'row',
