@@ -115,8 +115,7 @@ export default function AllTermsScreen() {
       <ImageBackground
         source={require('@/assets/images/buttons-red.png')}
         style={styles.buttonBackground}
-        resizeMode="contain"
-        imageStyle={styles.buttonBackgroundImage}>
+        resizeMode="stretch">
         <View style={styles.cardHeader}>
           <Text style={[styles.termName, { color: '#FFFFFF' }]}>{item.name}</Text>
           {item.difficulty > 0 && (
@@ -124,9 +123,10 @@ export default function AllTermsScreen() {
               {[1, 2, 3].map((level) => (
                 <Star
                   key={level}
-                  size={14}
+                  size={16}
                   color={item.difficulty >= level ? '#FFF' : 'rgba(255, 255, 255, 0.4)'}
                   fill={item.difficulty >= level ? '#FFF' : 'transparent'}
+                  strokeWidth={1.5}
                 />
               ))}
             </View>
@@ -259,18 +259,17 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 12,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 3,
-    height: 80,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
+    height: 70,
   },
   buttonBackground: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
-  },
-  buttonBackgroundImage: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   cardHeader: {
     flexDirection: 'row',
