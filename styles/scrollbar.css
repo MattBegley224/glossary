@@ -1,3 +1,9 @@
+body, html, #root {
+  background-color: #0F1419 !important;
+  margin: 0;
+  padding: 0;
+}
+
 ::-webkit-scrollbar {
   width: 14px;
   height: 14px;
