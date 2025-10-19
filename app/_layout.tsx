@@ -9,6 +9,12 @@ export default function RootLayout() {
     if (Platform.OS === 'web') {
       const style = document.createElement('style');
       style.textContent = `
+        body, html, #root {
+          background-color: #0F1419;
+          margin: 0;
+          padding: 0;
+        }
+
         ::-webkit-scrollbar {
           width: 14px;
           height: 14px;
