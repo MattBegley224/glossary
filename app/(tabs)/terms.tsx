@@ -157,7 +157,7 @@ export default function AllTermsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="light" />
 
       <View style={styles.header}>
         <View style={styles.headerTop}>

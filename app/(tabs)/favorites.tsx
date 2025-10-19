@@ -115,7 +115,7 @@ export default function FavoritesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="light" />
 
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>Favorites</Text>
