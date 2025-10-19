@@ -213,7 +213,7 @@ export default function SubjectDetailScreen() {
         source={require('@/assets/images/buttons-red.png')}
         style={styles.buttonBackground}
         imageStyle={styles.buttonImage}
-        resizeMode="stretch">
+        resizeMode="cover">
         <View style={styles.cardHeader}>
           <Text style={[styles.termName, { color: '#FFFFFF' }]} numberOfLines={1}>{item.name}</Text>
           {item.difficulty > 0 && (
