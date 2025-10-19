@@ -112,40 +112,42 @@ export default function AllTermsScreen() {
       onPress={() => handleTermPress(item)}
       style={[styles.card, { shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <ImageBackground
-        source={require('@/assets/images/buttons-red.png')}
-        style={styles.buttonBackground}
-        resizeMode="stretch">
-        <View style={styles.cardHeader}>
-          <Text style={[styles.termName, { color: '#FFFFFF' }]}>{item.name}</Text>
-          {item.difficulty > 0 && (
-            <View style={styles.difficultyContainer}>
-              {[1, 2, 3].map((level) => (
-                <Star
-                  key={level}
-                  size={16}
-                  color={item.difficulty >= level ? '#FFF' : 'rgba(255, 255, 255, 0.4)'}
-                  fill={item.difficulty >= level ? '#FFF' : 'transparent'}
-                  strokeWidth={1.5}
-                />
+      <View style={styles.buttonBackground}>
+        <View style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <Text style={[styles.termName, { color: '#FFFFFF' }]} numberOfLines={1}>{item.name}</Text>
+            {item.difficulty > 0 && (
+              <View style={styles.difficultyContainer}>
+                {[1, 2, 3].map((level) => (
+                  <Star
+                    key={level}
+                    size={16}
+                    color={item.difficulty >= level ? '#FFF' : 'rgba(255, 255, 255, 0.4)'}
+                    fill={item.difficulty >= level ? '#FFF' : 'transparent'}
+                    strokeWidth={1.5}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+          {item.subjects.length > 0 && (
+            <View style={styles.subjectsContainer}>
+              {item.subjects.slice(0, 3).map((subject) => (
+                <View
+                  key={subject.id}
+                  style={[styles.subjectChip, { backgroundColor: 'rgba(255, 255, 255, 0.25)' }]}>
+                  <Text style={[styles.subjectChipText, { color: '#FFFFFF' }]}>
+                    {subject.name}
+                  </Text>
+                </View>
               ))}
+              {item.subjects.length > 3 && (
+                <Text style={[styles.subjectChipText, { color: '#FFFFFF' }]}>+{item.subjects.length - 3}</Text>
+              )}
             </View>
           )}
         </View>
-        {item.subjects.length > 0 && (
-          <View style={styles.subjectsContainer}>
-            {item.subjects.map((subject) => (
-              <View
-                key={subject.id}
-                style={[styles.subjectChip, { backgroundColor: 'rgba(255, 255, 255, 0.25)' }]}>
-                <Text style={[styles.subjectChipText, { color: '#FFFFFF' }]}>
-                  {subject.name}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-      </ImageBackground>
+      </View>
     </AnimatedTouchable>
   );
 
@@ -258,16 +260,23 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    marginBottom: 20,
+    marginBottom: 16,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
+    borderRadius: 32,
+    overflow: 'hidden',
   },
   buttonBackground: {
     paddingHorizontal: 24,
-    paddingVertical: 20,
-    minHeight: 70,
+    paddingVertical: 16,
+    minHeight: 64,
+    backgroundColor: '#D32F2F',
+    borderRadius: 32,
+  },
+  cardContent: {
+    gap: 8,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -292,7 +301,8 @@ const styles = StyleSheet.create({
   subjectsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
+    alignItems: 'center',
   },
   subjectChip: {
     paddingHorizontal: 12,

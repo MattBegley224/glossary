@@ -209,12 +209,9 @@ export default function SubjectDetailScreen() {
       onPress={() => handleTermPress(item)}
       style={[styles.card, { shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <ImageBackground
-        source={require('@/assets/images/buttons-red.png')}
-        style={styles.buttonBackground}
-        resizeMode="stretch">
+      <View style={styles.buttonBackground}>
         <View style={styles.cardHeader}>
-          <Text style={[styles.termName, { color: '#FFFFFF' }]}>{item.name}</Text>
+          <Text style={[styles.termName, { color: '#FFFFFF' }]} numberOfLines={1}>{item.name}</Text>
           {item.difficulty > 0 && (
             <View style={styles.difficultyContainer}>
               {[1, 2, 3].map((level) => (
@@ -229,7 +226,7 @@ export default function SubjectDetailScreen() {
             </View>
           )}
         </View>
-      </ImageBackground>
+      </View>
     </AnimatedTouchable>
   );
 
@@ -415,16 +412,21 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    marginBottom: 20,
+    marginBottom: 16,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
+    height: 64,
+    borderRadius: 32,
+    overflow: 'hidden',
   },
   buttonBackground: {
+    flex: 1,
     paddingHorizontal: 24,
-    paddingVertical: 20,
-    minHeight: 70,
+    justifyContent: 'center',
+    backgroundColor: '#D32F2F',
+    borderRadius: 32,
   },
   cardHeader: {
     flexDirection: 'row',
