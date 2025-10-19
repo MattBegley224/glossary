@@ -212,7 +212,7 @@ export default function SubjectDetailScreen() {
       <ImageBackground
         source={require('@/assets/images/buttons-red.png')}
         style={styles.buttonBackground}
-        resizeMode="stretch"
+        resizeMode="contain"
         imageStyle={styles.buttonBackgroundImage}>
         <View style={styles.cardHeader}>
           <Text style={[styles.termName, { color: '#FFFFFF' }]}>{item.name}</Text>
@@ -415,19 +415,19 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    borderRadius: 16,
     marginBottom: 12,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 3,
-    overflow: 'hidden',
+    height: 80,
   },
   buttonBackground: {
-    padding: 20,
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 30,
   },
   buttonBackgroundImage: {
-    borderRadius: 16,
   },
   cardHeader: {
     flexDirection: 'row',
