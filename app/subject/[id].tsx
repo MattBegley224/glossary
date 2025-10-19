@@ -209,7 +209,11 @@ export default function SubjectDetailScreen() {
       onPress={() => handleTermPress(item)}
       style={[styles.card, { shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <View style={styles.buttonBackground}>
+      <ImageBackground
+        source={require('@/assets/images/buttons-red.png')}
+        style={styles.buttonBackground}
+        imageStyle={styles.buttonImage}
+        resizeMode="stretch">
         <View style={styles.cardHeader}>
           <Text style={[styles.termName, { color: '#FFFFFF' }]} numberOfLines={1}>{item.name}</Text>
           {item.difficulty > 0 && (
@@ -226,7 +230,7 @@ export default function SubjectDetailScreen() {
             </View>
           )}
         </View>
-      </View>
+      </ImageBackground>
     </AnimatedTouchable>
   );
 
@@ -425,7 +429,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'center',
-    backgroundColor: '#D32F2F',
+  },
+  buttonImage: {
     borderRadius: 32,
   },
   cardHeader: {
