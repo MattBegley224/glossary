@@ -11,6 +11,7 @@ import {
   RefreshControl,
   Platform,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -206,23 +207,29 @@ export default function SubjectDetailScreen() {
       exiting={FadeOutUp}
       layout={Layout.springify()}
       onPress={() => handleTermPress(item)}
-      style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
+      style={[styles.card, { shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <View style={styles.cardHeader}>
-        <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
-        {item.difficulty > 0 && (
-          <View style={styles.difficultyContainer}>
-            {[1, 2, 3].map((level) => (
-              <Star
-                key={level}
-                size={14}
-                color={item.difficulty >= level ? '#F59E0B' : colors.secondaryText}
-                fill={item.difficulty >= level ? '#F59E0B' : 'transparent'}
-              />
-            ))}
-          </View>
-        )}
-      </View>
+      <ImageBackground
+        source={require('@/assets/images/buttons-red.png')}
+        style={styles.buttonBackground}
+        resizeMode="stretch"
+        imageStyle={styles.buttonBackgroundImage}>
+        <View style={styles.cardHeader}>
+          <Text style={[styles.termName, { color: '#FFFFFF' }]}>{item.name}</Text>
+          {item.difficulty > 0 && (
+            <View style={styles.difficultyContainer}>
+              {[1, 2, 3].map((level) => (
+                <Star
+                  key={level}
+                  size={14}
+                  color={item.difficulty >= level ? '#FFF' : 'rgba(255, 255, 255, 0.4)'}
+                  fill={item.difficulty >= level ? '#FFF' : 'transparent'}
+                />
+              ))}
+            </View>
+          )}
+        </View>
+      </ImageBackground>
     </AnimatedTouchable>
   );
 
@@ -409,12 +416,18 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 16,
-    padding: 20,
     marginBottom: 12,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
+    overflow: 'hidden',
+  },
+  buttonBackground: {
+    padding: 20,
+  },
+  buttonBackgroundImage: {
+    borderRadius: 16,
   },
   cardHeader: {
     flexDirection: 'row',
