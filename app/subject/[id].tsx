@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, CreditCard as Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { database } from '@/services/database';
