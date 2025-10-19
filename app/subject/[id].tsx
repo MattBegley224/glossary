@@ -5,47 +5,69 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Pressable,
+  TextInput,
+  useColorScheme,
   RefreshControl,
   Platform,
   Alert,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Plus, BookOpen, Star, Upload, Trash2 } from 'lucide-react-native';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
-import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { database } from '@/services/database';
-import { Term } from '@/types/database';
+import { TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
 import { ImportModal } from '@/components/ImportModal';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function SubjectDetailScreen() {
+  const colorScheme = useColorScheme();
+  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
   const params = useLocalSearchParams<{ id: string; name: string; color: string }>();
-  const colorScheme = 'dark';
-  const colors = Colors.dark;
 
-  const [terms, setTerms] = useState<Term[]>([]);
+  const [terms, setTerms] = useState<TermWithSubjects[]>([]);
+  const [filteredTerms, setFilteredTerms] = useState<TermWithSubjects[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(params.name || '');
+  const [currentName, setCurrentName] = useState(params.name || '');
+  const [sortBy, setSortBy] = useState<'name' | 'difficulty'>('name');
+
+  console.log('🔍 Render state - isEditingName:', isEditingName, 'editedName:', editedName);
 
   useEffect(() => {
-    if (params.id) {
-      loadTerms();
-    }
+    loadTerms();
   }, [params.id]);
 
   useFocusEffect(
     useCallback(() => {
-      if (params.id) {
-        loadTerms();
-      }
+      loadTerms();
     }, [params.id])
   );
 
+  useEffect(() => {
+    if (params.name) {
+      setCurrentName(params.name);
+      if (!isEditingName) {
+        setEditedName(params.name);
+      }
+    }
+  }, [params.name]);
+
+  useEffect(() => {
+    filterTerms();
+  }, [searchQuery, terms, sortBy]);
+
   const loadTerms = async () => {
+    if (!params.id) return;
+
     try {
       const data = await database.terms.getBySubject(params.id);
       setTerms(data);
@@ -55,6 +77,36 @@ export default function SubjectDetailScreen() {
       setLoading(false);
       setRefreshing(false);
     }
+  };
+
+  const filterTerms = () => {
+    let filtered = terms;
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = terms.filter(
+        (term) =>
+          term.name.toLowerCase().includes(query) ||
+          term.definition.toLowerCase().includes(query)
+      );
+    }
+
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return (b.difficulty ?? 0) - (a.difficulty ?? 0);
+      }
+    });
+
+    setFilteredTerms(sorted);
+  };
+
+  const toggleSort = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setSortBy(sortBy === 'name' ? 'difficulty' : 'name');
   };
 
   const handleRefresh = () => {
@@ -75,7 +127,7 @@ export default function SubjectDetailScreen() {
     }
     router.push({
       pathname: '/term/new',
-      params: { subjectId: params.id, subjectName: params.name, subjectColor: params.color },
+      params: { subjectId: params.id, subjectName: params.name },
     });
   };
 
@@ -86,33 +138,59 @@ export default function SubjectDetailScreen() {
     setShowImportModal(true);
   };
 
-  const handleDeleteSubject = () => {
-    Alert.alert(
-      'Delete Subject',
-      `Are you sure you want to delete "${params.name}"? This will also delete all ${terms.length} terms in this subject.`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await database.subjects.delete(params.id);
-              if (Platform.OS !== 'web') {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-              }
-              router.back();
-            } catch (error) {
-              console.error('Error deleting subject:', error);
-              Alert.alert('Error', 'Failed to delete subject');
-            }
-          },
-        },
-      ]
-    );
+  const handleEditName = () => {
+    console.log('Edit name clicked, current isEditingName:', isEditingName);
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setIsEditingName(true);
+    console.log('Set isEditingName to true');
   };
 
-  const handleTermPress = (term: Term) => {
+  const handleSaveName = async () => {
+    const trimmedName = editedName.trim();
+
+    if (!trimmedName) {
+      if (Platform.OS === 'web') {
+        alert('Subject name cannot be empty');
+      } else {
+        Alert.alert('Error', 'Subject name cannot be empty');
+      }
+      return;
+    }
+
+    try {
+      console.log('Updating subject:', { id: params.id, name: trimmedName, color: params.color });
+      const result = await database.subjects.update(params.id, trimmedName, params.color);
+      console.log('Update result:', result);
+
+      if (Platform.OS !== 'web') {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+
+      setCurrentName(trimmedName);
+      setIsEditingName(false);
+      router.setParams({ name: trimmedName });
+    } catch (error: any) {
+      console.error('Error updating subject name:', error);
+      const errorMessage = error?.message || error?.toString() || 'Unknown error';
+      if (Platform.OS === 'web') {
+        alert('Failed to update subject name:\n\n' + errorMessage);
+      } else {
+        Alert.alert('Error', 'Failed to update subject name: ' + errorMessage);
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setEditedName(currentName);
+    setIsEditingName(false);
+  };
+
+  const handleTermPress = (term: TermWithSubjects) => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -122,7 +200,7 @@ export default function SubjectDetailScreen() {
     });
   };
 
-  const renderTermCard = ({ item, index }: { item: Term; index: number }) => (
+  const renderTermCard = ({ item, index }: { item: TermWithSubjects; index: number }) => (
     <AnimatedTouchable
       entering={FadeInDown.delay(index * 30).springify()}
       exiting={FadeOutUp}
@@ -131,9 +209,7 @@ export default function SubjectDetailScreen() {
       style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
       <View style={styles.cardHeader}>
-        <Text style={[styles.termName, { color: colors.text }]} numberOfLines={1}>
-          {item.name}
-        </Text>
+        <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
         {item.difficulty > 0 && (
           <View style={styles.difficultyContainer}>
             {[1, 2, 3].map((level) => (
@@ -147,48 +223,87 @@ export default function SubjectDetailScreen() {
           </View>
         )}
       </View>
-      <Text style={[styles.definition, { color: colors.secondaryText }]} numberOfLines={2}>
-        {item.definition}
-      </Text>
     </AnimatedTouchable>
   );
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
       <BookOpen size={64} color={colors.secondaryText} />
-      <Text style={[styles.emptyTitle, { color: colors.text }]}>No Terms Yet</Text>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>
+        {searchQuery ? 'No Terms Found' : 'No Terms Yet'}
+      </Text>
       <Text style={[styles.emptyText, { color: colors.secondaryText }]}>
-        Add your first term or import terms from a file
+        {searchQuery
+          ? 'Try adjusting your search'
+          : 'Add your first term to this subject'}
       </Text>
     </View>
   );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style="light" />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
+      <View style={[styles.header, { backgroundColor: params.color }]}>
         <View style={styles.headerTop}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <ArrowLeft size={24} color={colors.text} />
+          <TouchableOpacity onPress={handleBack} style={styles.backButton} activeOpacity={0.7}>
+            <ChevronLeft size={28} color="#FFFFFF" />
           </TouchableOpacity>
-          <View style={styles.headerInfo}>
-            <View style={[styles.colorDot, { backgroundColor: params.color }]} />
-            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-              {params.name}
-            </Text>
+
+          {isEditingName ? (
+            <View style={styles.editContainer}>
+              <TextInput
+                style={styles.editInput}
+                value={editedName}
+                onChangeText={setEditedName}
+                autoFocus
+                selectTextOnFocus
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              />
+              <View style={styles.editActions}>
+                <Pressable onPress={handleSaveName} style={[styles.editButton, styles.checkButton]}>
+                  <Check size={22} color="#FFFFFF" />
+                </Pressable>
+                <Pressable onPress={handleCancelEdit} style={styles.editButton}>
+                  <X size={22} color="#FFFFFF" />
+                </Pressable>
+              </View>
+            </View>
+          ) : (
+            <>
+              <Text style={styles.headerTitle}>{currentName}</Text>
+              <TouchableOpacity onPress={handleEditName} style={styles.editIconButton} activeOpacity={0.7}>
+                <Edit3 size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+
+        <View style={styles.controlsRow}>
+          <View style={[styles.searchContainer, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+            <Search size={20} color="#FFFFFF" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search terms..."
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
           </View>
-          <TouchableOpacity onPress={handleDeleteSubject} style={styles.deleteButton}>
-            <Trash2 size={20} color={colors.error} />
+          <TouchableOpacity
+            onPress={toggleSort}
+            style={styles.sortButton}
+            activeOpacity={0.7}>
+            <ArrowUpDown size={18} color="#FFFFFF" />
+            <Text style={styles.sortButtonText}>
+              {sortBy === 'name' ? 'Name' : 'Difficulty'}
+            </Text>
           </TouchableOpacity>
         </View>
-        <Text style={[styles.termCount, { color: colors.secondaryText }]}>
-          {terms.length} {terms.length === 1 ? 'term' : 'terms'}
-        </Text>
       </View>
 
       <FlatList
-        data={terms}
+        data={filteredTerms}
         renderItem={renderTermCard}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -200,29 +315,29 @@ export default function SubjectDetailScreen() {
 
       <View style={styles.fabContainer}>
         <TouchableOpacity
-          style={[styles.fabSecondary, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
+          style={[styles.fab, styles.fabSecondary, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
           onPress={handleImport}
           activeOpacity={0.8}>
-          <Upload size={24} color={colors.primary} />
+          <Upload size={24} color={params.color} />
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={[styles.fab, { backgroundColor: colors.primary, shadowColor: colors.shadow }]}
+          style={[styles.fab, { backgroundColor: params.color, shadowColor: colors.shadow }]}
           onPress={handleAddTerm}
           activeOpacity={0.8}>
           <Plus size={28} color="#ffffff" />
         </TouchableOpacity>
       </View>
 
-      <ImportModal
-        visible={showImportModal}
-        onClose={() => setShowImportModal(false)}
-        onImportSuccess={() => {
-          setShowImportModal(false);
-          loadTerms();
-        }}
-        subjectId={params.id}
-        subjectColor={params.color}
-      />
+      {showImportModal && (
+        <ImportModal
+          visible={showImportModal}
+          onClose={() => setShowImportModal(false)}
+          onImportSuccess={loadTerms}
+          subjectId={params.id}
+          subjectColor={params.color}
+        />
+      )}
     </View>
   );
 }
@@ -232,43 +347,61 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingBottom: 20,
-    borderBottomWidth: 1,
+    paddingHorizontal: 20,
   },
   headerTop: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
   backButton: {
-    marginRight: 12,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  headerInfo: {
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    flex: 1,
+    textAlign: 'center',
+  },
+  controlsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'center',
+  },
+  searchContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    gap: 12,
   },
-  colorDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 12,
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    gap: 6,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    flex: 1,
-  },
-  deleteButton: {
-    padding: 8,
-    marginLeft: 8,
-  },
-  termCount: {
+  sortButtonText: {
     fontSize: 14,
-    marginLeft: 48,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#FFFFFF',
   },
   listContent: {
     padding: 20,
@@ -277,7 +410,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     padding: 20,
-    marginBottom: 16,
+    marginBottom: 12,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -285,23 +418,22 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    alignItems: 'center',
   },
   termName: {
     fontSize: 18,
     fontWeight: '600',
     flex: 1,
-    marginRight: 8,
   },
   difficultyContainer: {
     flexDirection: 'row',
     gap: 2,
+    marginLeft: 8,
   },
   definition: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -324,6 +456,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 90,
+    flexDirection: 'column',
     gap: 12,
   },
   fab: {
@@ -341,11 +474,48 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
+    alignSelf: 'flex-end',
+  },
+  editContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginRight: 16,
+    paddingRight: 8,
+  },
+  editInput: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    minHeight: 40,
+  },
+  editActions: {
+    flexDirection: 'row',
+    gap: 8,
+    flexShrink: 0,
+    paddingRight: 24,
+  },
+  editButton: {
+    width: 44,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 8,
+  },
+  checkButton: {
+    marginRight: 16,
+  },
+  editIconButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  useColorScheme,
   RefreshControl,
   Platform,
 } from 'react-native';
@@ -25,8 +26,8 @@ import { useCallback } from 'react';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function SubjectsScreen() {
-  const colorScheme = 'dark';
-  const colors = Colors.dark;
+  const colorScheme = useColorScheme();
+  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
 
   const [subjects, setSubjects] = useState<SubjectWithTermCount[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +114,7 @@ export default function SubjectsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style="light" />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>Subjects</Text>

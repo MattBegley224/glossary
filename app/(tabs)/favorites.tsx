@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  useColorScheme,
   RefreshControl,
   Platform,
 } from 'react-native';
@@ -20,8 +21,8 @@ import { Colors } from '@/constants/colors';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function FavoritesScreen() {
-  const colorScheme = 'dark';
-  const colors = Colors.dark;
+  const colorScheme = useColorScheme();
+  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
 
   const [favorites, setFavorites] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,7 +116,7 @@ export default function FavoritesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style="light" />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>Favorites</Text>

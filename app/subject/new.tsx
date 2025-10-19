@@ -3,28 +3,30 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
+  useColorScheme,
   Platform,
+  KeyboardAvoidingView,
   ScrollView,
   Alert,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowLeft, Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
+import { X } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { database } from '@/services/database';
 import { Colors, SubjectColors } from '@/constants/colors';
 
 export default function NewSubjectScreen() {
-  const colorScheme = 'dark';
-  const colors = Colors.dark;
+  const colorScheme = useColorScheme();
+  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
 
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(SubjectColors[0]);
   const [saving, setSaving] = useState(false);
 
-  const handleBack = () => {
+  const handleClose = () => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -37,17 +39,13 @@ export default function NewSubjectScreen() {
       return;
     }
 
+    if (Platform.OS !== 'web') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+
     setSaving(true);
     try {
-      await database.subjects.create({
-        name: name.trim(),
-        color: selectedColor,
-      });
-
-      if (Platform.OS !== 'web') {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
-
+      await database.subjects.create(name.trim(), selectedColor);
       router.back();
     } catch (error) {
       console.error('Error creating subject:', error);
@@ -65,99 +63,110 @@ export default function NewSubjectScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="light" />
 
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>New Subject</Text>
-        <TouchableOpacity
-          onPress={handleSave}
-          style={styles.saveButton}
-          disabled={saving || !name.trim()}>
-          <Check size={24} color={!name.trim() ? colors.secondaryText : colors.primary} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.backdrop} onPress={handleClose} activeOpacity={1} />
 
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.section}>
-          <Text style={[styles.label, { color: colors.text }]}>Subject Name</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.card,
-                color: colors.text,
-                borderColor: colors.border,
-              },
-            ]}
-            value={name}
-            onChangeText={setName}
-            placeholder="e.g., Biology, History, Mathematics"
-            placeholderTextColor={colors.secondaryText}
-            autoFocus
-          />
+      <View style={[styles.modal, { backgroundColor: colors.background }]}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>New Subject</Text>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton} activeOpacity={0.7}>
+            <X size={24} color={colors.text} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.label, { color: colors.text }]}>Color</Text>
-          <View style={styles.colorGrid}>
-            {SubjectColors.map((color) => (
-              <TouchableOpacity
-                key={color}
-                style={[
-                  styles.colorOption,
-                  { backgroundColor: color },
-                  selectedColor === color && styles.colorOptionSelected,
-                ]}
-                onPress={() => handleColorSelect(color)}
-                activeOpacity={0.7}>
-                {selectedColor === color && (
-                  <Check size={24} color="#ffffff" strokeWidth={3} />
-                )}
-              </TouchableOpacity>
-            ))}
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Subject Name</Text>
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: colors.card, color: colors.text, borderColor: colors.border },
+              ]}
+              placeholder="e.g., Biology, History, Math"
+              placeholderTextColor={colors.secondaryText}
+              value={name}
+              onChangeText={setName}
+              autoFocus
+            />
           </View>
+
+          <View style={styles.colorContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Color</Text>
+            <View style={styles.colorGrid}>
+              {SubjectColors.map((color) => (
+                <TouchableOpacity
+                  key={color}
+                  onPress={() => handleColorSelect(color)}
+                  style={[
+                    styles.colorOption,
+                    { backgroundColor: color },
+                    selectedColor === color && styles.colorOptionSelected,
+                  ]}
+                  activeOpacity={0.7}
+                />
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={handleSave}
+            disabled={saving}
+            activeOpacity={0.8}>
+            <Text style={styles.buttonText}>{saving ? 'Creating...' : 'Create Subject'}</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'flex-end',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modal: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 20,
+    maxHeight: '90%',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 60,
     paddingBottom: 20,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    marginRight: 12,
   },
   title: {
-    flex: 1,
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
-    letterSpacing: -0.5,
   },
-  saveButton: {
-    padding: 8,
+  closeButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
-    flex: 1,
+    paddingHorizontal: 20,
   },
-  contentContainer: {
-    padding: 20,
-  },
-  section: {
-    marginBottom: 32,
+  inputContainer: {
+    marginBottom: 24,
   },
   label: {
     fontSize: 16,
@@ -165,25 +174,41 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   input: {
-    borderRadius: 12,
-    padding: 16,
     fontSize: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
     borderWidth: 1,
+  },
+  colorContainer: {
+    marginBottom: 24,
   },
   colorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 16,
   },
   colorOption: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
   },
   colorOptionSelected: {
-    borderWidth: 3,
-    borderColor: '#ffffff',
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  footer: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  button: {
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
   },
 });

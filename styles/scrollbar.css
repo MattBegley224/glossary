@@ -1,34 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #0F1419 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-html {
-  background-color: #0F1419 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-#root {
-  background-color: #0F1419 !important;
-  min-height: 100vh !important;
-}
-
-div[data-expo-root] {
-  background-color: #0F1419 !important;
-  min-height: 100vh !important;
-}
-
-div[data-reactroot] {
-  background-color: #0F1419 !important;
-  min-height: 100vh !important;
-}
-
 ::-webkit-scrollbar {
   width: 14px;
   height: 14px;
