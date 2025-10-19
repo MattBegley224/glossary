@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  useColorScheme,
   Platform,
   Alert,
   ScrollView,
@@ -25,8 +24,8 @@ interface ImportModalProps {
 }
 
 export function ImportModal({ visible, onClose, onImportSuccess, subjectId, subjectColor }: ImportModalProps) {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colorScheme = 'dark';
+  const colors = Colors.dark;
 
   const [importing, setImporting] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);

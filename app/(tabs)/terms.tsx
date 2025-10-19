@@ -6,7 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  useColorScheme,
   RefreshControl,
   Platform,
 } from 'react-native';
@@ -22,8 +21,8 @@ import { Colors } from '@/constants/colors';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function AllTermsScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colorScheme = 'dark';
+  const colors = Colors.dark;
 
   const [terms, setTerms] = useState<TermWithSubjects[]>([]);
   const [filteredTerms, setFilteredTerms] = useState<TermWithSubjects[]>([]);
