@@ -11,11 +11,10 @@ import {
   RefreshControl,
   Platform,
   Alert,
-  ImageBackground,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { ChevronLeft, Search, Plus, BookOpen, Upload, CreditCard as Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { database } from '@/services/database';
@@ -207,30 +206,23 @@ export default function SubjectDetailScreen() {
       exiting={FadeOutUp}
       layout={Layout.springify()}
       onPress={() => handleTermPress(item)}
-      style={[styles.card, { shadowColor: colors.shadow }]}
+      style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]}
       activeOpacity={0.7}>
-      <ImageBackground
-        source={require('@/assets/images/buttons-red.png')}
-        style={styles.buttonBackground}
-        imageStyle={styles.buttonImage}
-        resizeMode="cover">
-        <View style={styles.cardHeader}>
-          <Text style={[styles.termName, { color: '#FFFFFF' }]} numberOfLines={1}>{item.name}</Text>
-          {item.difficulty > 0 && (
-            <View style={styles.difficultyContainer}>
-              {[1, 2, 3].map((level) => (
-                <Star
-                  key={level}
-                  size={16}
-                  color={item.difficulty >= level ? '#FFF' : 'rgba(255, 255, 255, 0.4)'}
-                  fill={item.difficulty >= level ? '#FFF' : 'transparent'}
-                  strokeWidth={1.5}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-      </ImageBackground>
+      <View style={styles.cardHeader}>
+        <Text style={[styles.termName, { color: colors.text }]}>{item.name}</Text>
+        {item.difficulty > 0 && (
+          <View style={styles.difficultyContainer}>
+            {[1, 2, 3].map((level) => (
+              <Star
+                key={level}
+                size={14}
+                color={item.difficulty >= level ? '#F59E0B' : colors.secondaryText}
+                fill={item.difficulty >= level ? '#F59E0B' : 'transparent'}
+              />
+            ))}
+          </View>
+        )}
+      </View>
     </AnimatedTouchable>
   );
 
@@ -416,22 +408,13 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    marginBottom: 16,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 5,
-    height: 72,
-    overflow: 'hidden',
-  },
-  buttonBackground: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
-  },
-  buttonImage: {
-    width: '100%',
-    height: '100%',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 12,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
