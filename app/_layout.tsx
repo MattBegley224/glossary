@@ -8,51 +8,8 @@ import '../styles/scrollbar.css';
 export default function RootLayout() {
   useEffect(() => {
     if (Platform.OS === 'web') {
-      const style = document.createElement('style');
-      style.textContent = `
-        body, html, #root {
-          background-color: #0F1419;
-          margin: 0;
-          padding: 0;
-        }
-
-        ::-webkit-scrollbar {
-          width: 14px;
-          height: 14px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: rgba(59, 130, 246, 0.1);
-          border-radius: 12px;
-          margin: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-          border-radius: 12px;
-          border: 3px solid transparent;
-          background-clip: padding-box;
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-          border-radius: 12px;
-          border: 2px solid transparent;
-          background-clip: padding-box;
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-
-        ::-webkit-scrollbar-thumb:active {
-          background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
-        }
-
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: #3b82f6 rgba(59, 130, 246, 0.1);
-        }
-      `;
-      document.head.appendChild(style);
+      document.body.style.backgroundColor = '#0F1419';
+      document.documentElement.style.backgroundColor = '#0F1419';
       window.frameworkReady?.();
     }
   }, []);
