@@ -415,18 +415,16 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    marginBottom: 12,
+    marginBottom: 20,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
-    height: 70,
   },
   buttonBackground: {
-    flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingVertical: 20,
+    minHeight: 70,
   },
   cardHeader: {
     flexDirection: 'row',
