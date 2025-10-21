@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import IntroVideo from '@/components/IntroVideo';
 
 export default function RootLayout() {
+  const [showIntro, setShowIntro] = useState(true);
   useEffect(() => {
     if (Platform.OS === 'web') {
       const style = document.createElement('style');
@@ -49,6 +51,10 @@ export default function RootLayout() {
       window.frameworkReady?.();
     }
   }, []);
+
+  if (showIntro) {
+    return <IntroVideo onFinish={() => setShowIntro(false)} />;
+  }
 
   return (
     <>
