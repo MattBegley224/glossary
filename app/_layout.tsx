@@ -6,7 +6,7 @@ import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import IntroVideo from '@/components/IntroVideo';
 
 export default function RootLayout() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
   useEffect(() => {
     if (Platform.OS === 'web') {
       const style = document.createElement('style');
