@@ -5,8 +5,6 @@ import { Platform } from 'react-native';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 
 export default function RootLayout() {
-  useFrameworkReady();
-
   useEffect(() => {
     if (Platform.OS === 'web') {
       const style = document.createElement('style');
@@ -48,6 +46,7 @@ export default function RootLayout() {
         }
       `;
       document.head.appendChild(style);
+      window.frameworkReady?.();
     }
   }, []);
 
