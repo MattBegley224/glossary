@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 20,
+    paddingBottom: 20,
     height: '100%',
   },
   header: {
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingTop: 40,
     paddingBottom: 20,
   },
   title: {
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   inputContainer: {
     marginBottom: 24,

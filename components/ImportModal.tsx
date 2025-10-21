@@ -296,6 +296,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 20,
+    paddingBottom: 20,
     maxHeight: '90%',
   },
   header: {
@@ -317,6 +318,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   infoBox: {
     padding: 16,

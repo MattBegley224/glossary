@@ -493,7 +493,8 @@ const styles = StyleSheet.create({
   modal: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingTop: 0,
+    paddingTop: 20,
+    paddingBottom: 20,
     height: '100%',
   },
   header: {
@@ -501,7 +502,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 40,
     paddingBottom: 8,
     position: 'relative',
   },
@@ -534,6 +535,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   cardContainer: {
     minHeight: 385,
