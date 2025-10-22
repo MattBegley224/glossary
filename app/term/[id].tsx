@@ -74,8 +74,7 @@ function LinkedDefinition({
 }
 
 export default function TermDetailScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
   const params = useLocalSearchParams<{ id: string }>();
 
   const [term, setTerm] = useState<TermWithSubjects | null>(null);
@@ -544,7 +543,7 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
-    height: 300,
+    height: 250,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
     overflow: 'hidden',

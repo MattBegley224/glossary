@@ -21,8 +21,7 @@ import { Colors } from '@/constants/colors';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function FavoritesScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
 
   const [favorites, setFavorites] = useState<TermWithSubjects[]>([]);
   const [loading, setLoading] = useState(true);

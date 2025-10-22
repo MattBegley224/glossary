@@ -20,8 +20,7 @@ import { Subject } from '@/types/database';
 import { Colors } from '@/constants/colors';
 
 export default function NewTermScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
   const params = useLocalSearchParams<{ subjectId?: string; subjectName?: string }>();
 
   const [name, setName] = useState('');

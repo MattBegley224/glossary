@@ -19,8 +19,7 @@ import { database } from '@/services/database';
 import { Colors, SubjectColors } from '@/constants/colors';
 
 export default function NewSubjectScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
 
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(SubjectColors[0]);

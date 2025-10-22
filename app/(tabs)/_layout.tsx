@@ -4,8 +4,7 @@ import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
 
   return (
     <Tabs

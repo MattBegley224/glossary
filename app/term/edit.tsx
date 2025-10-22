@@ -20,8 +20,7 @@ import { Subject, TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
 
 export default function EditTermScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
   const params = useLocalSearchParams<{ id: string }>();
 
   const [name, setName] = useState('');

@@ -64,7 +64,7 @@ export default function RootLayout() {
         <Stack.Screen name="term/edit" />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </>
   );
 }

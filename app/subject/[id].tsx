@@ -25,8 +25,7 @@ import { ImportModal } from '@/components/ImportModal';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function SubjectDetailScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = Colors.dark;
   const params = useLocalSearchParams<{ id: string; name: string; color: string }>();
 
   const [terms, setTerms] = useState<TermWithSubjects[]>([]);
