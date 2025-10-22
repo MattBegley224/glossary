@@ -538,13 +538,13 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   cardContainer: {
-    height: 300,
-    marginBottom: 2,
+    height: 250,
+    marginBottom: 5,
   },
   card: {
     position: 'absolute',
     width: '100%',
-    height: 300,
+    height: 250,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
   },
