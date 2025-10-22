@@ -667,7 +667,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     gap: 12,
-    marginTop: 30,
+    marginTop: 10,
   },
   sliderTrack: {
     flex: 1,
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 20,
+    paddingTop: 0,
     paddingBottom: 20,
     gap: 12,
   },
