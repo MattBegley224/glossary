@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     height: 280,
-    marginBottom: 16,
+    marginBottom: 0,
   },
   card: {
     position: 'absolute',
