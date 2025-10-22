@@ -538,13 +538,13 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   cardContainer: {
-    height: 280,
-    marginBottom: 16,
+    height: 350,
+    marginBottom: 5,
   },
   card: {
     position: 'absolute',
     width: '100%',
-    height: 280,
+    height: 350,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
   },
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    height: 280,
+    height: 350,
     overflow: 'hidden',
   },
   cardInnerGlow: {
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
     gap: 12,
   },
   sliderTrack: {
@@ -705,8 +705,9 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 0,
-    paddingBottom: 20,
+    paddingTop: 5,
+    paddingBottom: 13,
+    marginTop: 5,
     gap: 12,
   },
   actionButton: {
