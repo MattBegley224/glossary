@@ -536,11 +536,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingBottom: 20,
-    flex: 1,
   },
   cardContainer: {
     height: 350,
-    marginBottom: 60,
+    marginBottom: 40,
   },
   card: {
     position: 'absolute',
@@ -667,8 +666,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    paddingTop: 30,
-    marginTop: 20,
     gap: 12,
   },
   sliderTrack: {
