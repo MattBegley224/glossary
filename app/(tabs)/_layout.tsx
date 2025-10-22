@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
 import { Home, BookMarked, Star } from 'lucide-react-native';
-import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 export default function TabLayout() {

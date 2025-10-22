@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Pressable,
   TextInput,
-  useColorScheme,
   RefreshControl,
   Platform,
   Alert,
@@ -241,7 +240,7 @@ export default function SubjectDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="light" />
 
       <View style={[styles.header, { backgroundColor: params.color }]}>
         <View style={styles.headerTop}>
