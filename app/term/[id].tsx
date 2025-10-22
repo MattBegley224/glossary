@@ -666,7 +666,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    marginTop: 5,
+    marginTop: 20,
     gap: 12,
   },
   sliderTrack: {
