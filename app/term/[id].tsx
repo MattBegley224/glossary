@@ -347,48 +347,46 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { borderColor: colors.primary, borderWidth: 1, backgroundColor: colors.card },
+                { borderColor: colors.primary, borderWidth: 2, backgroundColor: colors.card },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.cardContentWrapper}>
-                <View style={styles.cardInnerGlow} pointerEvents="none">
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    style={styles.glowTop}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    style={styles.glowBottom}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={styles.glowLeft}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: 0, y: 0 }}
-                    style={styles.glowRight}
-                  />
-                </View>
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.cardScrollContent}
-                  style={styles.cardScroll}>
-                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                  <LinkedDefinition
-                    definition={term.definition}
-                    allTerms={allTerms}
-                    currentTermId={term.id}
-                    textColor={colors.text}
-                    linkColor={colors.primary}
-                    fontSize={18 * textSizeMultiplier}
-                  />
-                </ScrollView>
+              <View style={styles.cardInnerGlow} pointerEvents="none">
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowTop}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowBottom}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.glowLeft}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  style={styles.glowRight}
+                />
               </View>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.cardScrollContent}
+                style={styles.cardScroll}>
+                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                <LinkedDefinition
+                  definition={term.definition}
+                  allTerms={allTerms}
+                  currentTermId={term.id}
+                  textColor={colors.text}
+                  linkColor={colors.primary}
+                  fontSize={18 * textSizeMultiplier}
+                />
+              </ScrollView>
             </Animated.View>
           </View>
         </ScrollView>
@@ -570,14 +568,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 14,
+    height: 30,
   },
   glowBottom: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 14,
+    height: 30,
     transform: [{ rotate: '180deg' }],
   },
   glowLeft: {
@@ -585,14 +583,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: 14,
+    width: 30,
   },
   glowRight: {
     position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
-    width: 14,
+    width: 30,
   },
   cardTouchable: {
     flex: 1,
@@ -600,13 +598,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  cardContentWrapper: {
-    flex: 1,
-    padding: 20,
-  },
   cardScroll: {
     flex: 1,
     width: '100%',
+    padding: 20,
   },
   cardScrollContent: {
     alignItems: 'center',
