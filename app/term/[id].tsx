@@ -326,7 +326,7 @@ export default function TermDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
           <View style={styles.cardContainer}>
             <Animated.View
               style={[
@@ -347,49 +347,51 @@ export default function TermDetailScreen() {
             <Animated.View
               style={[
                 styles.card,
-                { borderColor: colors.primary, borderWidth: 2, backgroundColor: colors.card },
+                { borderColor: colors.primary, borderWidth: 1, backgroundColor: colors.card },
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
-              <View style={styles.cardInnerGlow} pointerEvents="none">
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  style={styles.glowTop}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  style={styles.glowBottom}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.glowLeft}
-                />
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 0, y: 0 }}
-                  style={styles.glowRight}
-                />
+              <View style={styles.cardContentWrapper}>
+                <View style={styles.cardInnerGlow} pointerEvents="none">
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    style={styles.glowTop}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    style={styles.glowBottom}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.glowLeft}
+                  />
+                  <LinearGradient
+                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.glowRight}
+                  />
+                </View>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.cardScrollContent}
+                  style={styles.cardScroll}>
+                  <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
+                  <LinkedDefinition
+                    definition={term.definition}
+                    allTerms={allTerms}
+                    currentTermId={term.id}
+                    textColor={colors.text}
+                    linkColor={colors.primary}
+                    fontSize={18 * textSizeMultiplier}
+                  />
+                </ScrollView>
               </View>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.cardScrollContent}
-                style={styles.cardScroll}>
-                <Text style={[styles.termName, { color: colors.text, marginBottom: 24 }]}>{term.name}</Text>
-                <LinkedDefinition
-                  definition={term.definition}
-                  allTerms={allTerms}
-                  currentTermId={term.id}
-                  textColor={colors.text}
-                  linkColor={colors.primary}
-                  fontSize={18 * textSizeMultiplier}
-                />
-              </ScrollView>
             </Animated.View>
           </View>
-        </ScrollView>
+        </View>
 
         <View style={styles.textSizeContainer}>
           <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
@@ -536,16 +538,15 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   cardContainer: {
-    minHeight: 385,
-    marginBottom: 5,
+    height: 280,
+    marginBottom: 16,
   },
   card: {
     position: 'absolute',
     width: '100%',
-    height: 350,
+    height: 280,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
-    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -553,7 +554,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    height: '100%',
+    height: 280,
+    overflow: 'hidden',
   },
   cardInnerGlow: {
     position: 'absolute',
@@ -568,14 +570,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 30,
+    height: 14,
   },
   glowBottom: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 30,
+    height: 14,
     transform: [{ rotate: '180deg' }],
   },
   glowLeft: {
@@ -583,14 +585,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: 30,
+    width: 14,
   },
   glowRight: {
     position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
-    width: 30,
+    width: 14,
   },
   cardTouchable: {
     flex: 1,
@@ -598,10 +600,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
+  cardContentWrapper: {
+    flex: 1,
+    padding: 20,
+  },
   cardScroll: {
     flex: 1,
     width: '100%',
-    padding: 20,
   },
   cardScrollContent: {
     alignItems: 'center',
@@ -660,8 +665,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginTop: 5,
+    paddingVertical: 16,
     gap: 12,
   },
   sliderTrack: {
@@ -701,9 +705,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 5,
-    paddingBottom: 13,
-    marginTop: 5,
+    paddingTop: 0,
+    paddingBottom: 20,
     gap: 12,
   },
   actionButton: {
