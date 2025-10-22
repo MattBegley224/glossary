@@ -326,7 +326,7 @@ export default function TermDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.content}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.cardContainer}>
             <Animated.View
               style={[
@@ -391,7 +391,7 @@ export default function TermDetailScreen() {
               </View>
             </Animated.View>
           </View>
-        </View>
+        </ScrollView>
 
         <View style={styles.textSizeContainer}>
           <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
@@ -538,15 +538,16 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   cardContainer: {
-    height: 280,
-    marginBottom: 16,
+    minHeight: 385,
+    marginBottom: 5,
   },
   card: {
     position: 'absolute',
     width: '100%',
-    height: 280,
+    height: 350,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
+    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -554,8 +555,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    height: 280,
-    overflow: 'hidden',
+    height: '100%',
   },
   cardInnerGlow: {
     position: 'absolute',
@@ -665,7 +665,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
+    marginTop: 5,
     gap: 12,
   },
   sliderTrack: {
@@ -705,8 +706,9 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 0,
-    paddingBottom: 20,
+    paddingTop: 5,
+    paddingBottom: 13,
+    marginTop: 5,
     gap: 12,
   },
   actionButton: {
