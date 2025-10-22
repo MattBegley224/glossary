@@ -32,7 +32,6 @@ export function ImportModal({ visible, onClose, onImportSuccess, subjectId, subj
   const [fileName, setFileName] = useState<string | null>(null);
   const [preview, setPreview] = useState<ImportedTerm[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handlePickFile = async () => {
     if (Platform.OS !== 'web') {
