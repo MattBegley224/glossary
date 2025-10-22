@@ -547,7 +547,6 @@ const styles = StyleSheet.create({
     height: 350,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
-    overflow: 'hidden',
   },
   cardFront: {
     minHeight: '100%',
@@ -555,7 +554,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBack: {
-    height: '100%',
+    height: 350,
+    overflow: 'hidden',
   },
   cardInnerGlow: {
     position: 'absolute',
