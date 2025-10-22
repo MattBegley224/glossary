@@ -326,7 +326,7 @@ export default function TermDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
           <View style={styles.cardContainer}>
             <Animated.View
               style={[
@@ -391,7 +391,7 @@ export default function TermDetailScreen() {
               </View>
             </Animated.View>
           </View>
-        </ScrollView>
+        </View>
 
         <View style={styles.textSizeContainer}>
           <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
@@ -536,10 +536,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    flex: 1,
   },
   cardContainer: {
-    minHeight: 385,
-    marginBottom: 5,
+    height: 350,
   },
   card: {
     position: 'absolute',
