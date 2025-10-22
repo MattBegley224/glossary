@@ -544,7 +544,7 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: '100%',
-    height: 350,
+    height: 300,
     borderRadius: 20,
     backfaceVisibility: 'hidden',
     overflow: 'hidden',
