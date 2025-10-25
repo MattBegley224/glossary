@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   textArea: {
-    minHeight: 300,
+    minHeight: 350,
   },
   textAreaWrapper: {
     position: 'relative',
