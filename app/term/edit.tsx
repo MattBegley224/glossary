@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  PanResponder,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -16,6 +17,7 @@ import { X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database } from '@/services/database';
+import { preferences } from '@/services/preferences';
 import { Subject, TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
 
@@ -29,6 +31,33 @@ export default function EditTermScreen() {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [textSizeMultiplier, setTextSizeMultiplier] = useState(preferences.getFontSizeMultiplier());
+  const sliderWidth = useRef(0);
+  const sliderX = useRef(0);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderGrant: (evt) => {
+        const locationX = evt.nativeEvent.locationX;
+        const percentage = Math.max(0, Math.min(1, locationX / sliderWidth.current));
+        const newMultiplier = 0.5 + percentage * 1.5;
+        setTextSizeMultiplier(newMultiplier);
+        preferences.setFontSizeMultiplier(newMultiplier);
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        const x = gestureState.moveX - sliderX.current;
+        const percentage = Math.max(0, Math.min(1, x / sliderWidth.current));
+        const newMultiplier = 0.5 + percentage * 1.5;
+        setTextSizeMultiplier(newMultiplier);
+        preferences.setFontSizeMultiplier(newMultiplier);
+      },
+      onPanResponderTerminationRequest: () => false,
+    })
+  ).current;
 
   useEffect(() => {
     loadData();
@@ -176,7 +205,7 @@ export default function EditTermScreen() {
                 style={[
                   styles.input,
                   styles.textArea,
-                  { backgroundColor: colors.card, color: colors.text, borderColor: colors.primary, borderWidth: 1 },
+                  { backgroundColor: colors.card, color: colors.text, borderColor: colors.primary, borderWidth: 1, fontSize: 16 * textSizeMultiplier, lineHeight: 16 * textSizeMultiplier * 1.35 },
                 ]}
                 placeholder="Enter definition"
                 placeholderTextColor={colors.secondaryText}
@@ -187,6 +216,23 @@ export default function EditTermScreen() {
                 textAlignVertical="top"
               />
             </View>
+          </View>
+
+          <View style={styles.textSizeContainer}>
+            <Text style={[styles.textSizeLabel, { color: colors.secondaryText }]}>A</Text>
+            <View
+              style={styles.sliderTrack}
+              onLayout={(e) => {
+                sliderWidth.current = e.nativeEvent.layout.width;
+                sliderX.current = e.nativeEvent.layout.x;
+              }}
+              {...panResponder.panHandlers}>
+              <View style={[styles.sliderFill, { width: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]} />
+              <View
+                style={[styles.sliderThumb, { left: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]}
+              />
+            </View>
+            <Text style={[styles.textSizeLabel, styles.textSizeLabelLarge, { color: colors.secondaryText }]}>A</Text>
           </View>
 
           <View style={styles.subjectsContainer}>
@@ -367,5 +413,46 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
+  },
+  textSizeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    marginBottom: 24,
+    gap: 12,
+  },
+  sliderTrack: {
+    flex: 1,
+    height: 4,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 2,
+    position: 'relative',
+  },
+  sliderFill: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    borderRadius: 2,
+  },
+  sliderThumb: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    top: -8,
+    marginLeft: -10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  textSizeLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  textSizeLabelLarge: {
+    fontSize: 24,
   },
 });
