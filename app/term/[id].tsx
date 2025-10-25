@@ -349,29 +349,29 @@ export default function TermDetailScreen() {
                 backAnimatedStyle,
                 styles.cardBack,
               ]}>
+              <View style={styles.cardInnerGlow} pointerEvents="none">
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowTop}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowBottom}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.glowLeft}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  style={styles.glowRight}
+                />
+              </View>
               <View style={styles.cardContentWrapper}>
-                <View style={styles.cardInnerGlow} pointerEvents="none">
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    style={styles.glowTop}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    style={styles.glowBottom}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={styles.glowLeft}
-                  />
-                  <LinearGradient
-                    colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: 0, y: 0 }}
-                    style={styles.glowRight}
-                  />
-                </View>
                 <ScrollView
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={styles.cardScrollContent}
