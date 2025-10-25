@@ -205,7 +205,7 @@ export default function EditTermScreen() {
                 style={[
                   styles.input,
                   styles.textArea,
-                  { backgroundColor: colors.card, color: colors.text, borderColor: colors.primary, borderWidth: 1, fontSize: 16 * textSizeMultiplier, lineHeight: 16 * textSizeMultiplier * 1.35 },
+                  { backgroundColor: colors.card, color: colors.text, borderColor: colors.primary, borderWidth: 1, fontSize: 16 * textSizeMultiplier, lineHeight: 16 * textSizeMultiplier * 1.35, textAlign: 'center' },
                 ]}
                 placeholder="Enter definition"
                 placeholderTextColor={colors.secondaryText}
@@ -213,7 +213,7 @@ export default function EditTermScreen() {
                 onChangeText={setDefinition}
                 multiline
                 numberOfLines={4}
-                textAlignVertical="top"
+                textAlignVertical="center"
               />
             </View>
           </View>
@@ -238,31 +238,26 @@ export default function EditTermScreen() {
           <View style={styles.subjectsContainer}>
             <Text style={[styles.label, { color: colors.text }]}>Subjects</Text>
             <View style={styles.subjectsGrid}>
-              {subjects.map((subject) => {
-                const isSelected = selectedSubjects.includes(subject.id);
-                return (
-                  <TouchableOpacity
+              {subjects
+                .filter((subject) => selectedSubjects.includes(subject.id))
+                .map((subject) => (
+                  <View
                     key={subject.id}
-                    onPress={() => toggleSubject(subject.id)}
                     style={[
                       styles.subjectChip,
                       {
-                        backgroundColor: isSelected ? subject.color : colors.card,
-                        borderColor: subject.color,
-                        borderWidth: isSelected ? 0 : 1,
+                        backgroundColor: subject.color,
                       },
-                    ]}
-                    activeOpacity={0.7}>
+                    ]}>
                     <Text
                       style={[
                         styles.subjectChipText,
-                        { color: isSelected ? '#FFFFFF' : subject.color },
+                        { color: '#FFFFFF' },
                       ]}>
                       {subject.name}
                     </Text>
-                  </TouchableOpacity>
-                );
-              })}
+                  </View>
+                ))}
             </View>
           </View>
         </ScrollView>
@@ -323,7 +318,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   inputContainer: {
-    marginBottom: 24,
+    marginBottom: 12,
   },
   label: {
     fontSize: 16,
@@ -384,7 +379,7 @@ const styles = StyleSheet.create({
     width: 14,
   },
   subjectsContainer: {
-    marginBottom: 24,
+    marginBottom: 12,
   },
   subjectsGrid: {
     flexDirection: 'row',
@@ -418,7 +413,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    marginBottom: 24,
+    marginBottom: 12,
     gap: 12,
   },
   sliderTrack: {
