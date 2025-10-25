@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -54,7 +55,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="subject/new" />
@@ -65,6 +66,6 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="light" />
-    </>
+    </ErrorBoundary>
   );
 }

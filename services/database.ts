@@ -2,10 +2,20 @@ import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
 import { Subject, Term, TermSubject, SubjectWithTermCount, TermWithSubjects } from '@/types/database';
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables. Please ensure EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY are set in your .env file.'
+  );
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false,
+  },
+});
 
 function mapTermFromDb(dbTerm: any): Term {
   return {
@@ -19,6 +29,28 @@ function mapTermFromDb(dbTerm: any): Term {
   };
 }
 
+function handleDatabaseError(error: any, operation: string): never {
+  console.error(`Database error during ${operation}:`, error);
+
+  if (error?.code === 'PGRST116') {
+    throw new Error('No data found');
+  }
+
+  if (error?.message?.includes('duplicate key')) {
+    throw new Error('This item already exists');
+  }
+
+  if (error?.message?.includes('violates foreign key constraint')) {
+    throw new Error('Cannot complete operation: related data exists');
+  }
+
+  if (error?.code === '23505') {
+    throw new Error('Duplicate entry detected');
+  }
+
+  throw new Error(error?.message || `Failed to ${operation}`);
+}
+
 export const database = {
   subjects: {
     async getAll(): Promise<SubjectWithTermCount[]> {
@@ -30,7 +62,7 @@ export const database = {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) handleDatabaseError(error, 'fetch subjects');
 
       return (data || []).map((subject) => ({
         ...subject,

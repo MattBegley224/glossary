@@ -397,9 +397,6 @@ export default function TermDetailScreen() {
             style={styles.sliderTrack}
             onLayout={(e) => {
               sliderWidth.current = e.nativeEvent.layout.width;
-              e.nativeEvent.target.measureInWindow((x: number) => {
-                sliderX.current = x;
-              });
             }}
             {...panResponder.panHandlers}>
             <View style={[styles.sliderFill, { width: `${(textSizeMultiplier - 0.5) / 1.5 * 100}%`, backgroundColor: colors.primary }]} />
