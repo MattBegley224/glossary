@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown } from 'lucide-react-native';
+import { ChevronLeft, Search, Plus, BookOpen, Upload, Edit3, Check, X, Star, ArrowUpDown, Trash2 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { database } from '@/services/database';
@@ -188,6 +188,43 @@ export default function SubjectDetailScreen() {
     setIsEditingName(false);
   };
 
+  const handleDelete = async () => {
+    const confirmDelete = Platform.OS === 'web'
+      ? window.confirm(`Are you sure you want to delete "${currentName}"? This will also remove it from all terms.`)
+      : await new Promise<boolean>((resolve) => {
+          Alert.alert(
+            'Delete Subject',
+            `Are you sure you want to delete "${currentName}"? This will also remove it from all terms.`,
+            [
+              { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+              {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: () => resolve(true),
+              },
+            ]
+          );
+        });
+
+    if (!confirmDelete) return;
+
+    if (Platform.OS !== 'web') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+
+    try {
+      await database.subjects.delete(params.id);
+      router.back();
+    } catch (error) {
+      console.error('Error deleting subject:', error);
+      if (Platform.OS === 'web') {
+        alert(`Failed to delete subject: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      } else {
+        Alert.alert('Error', 'Failed to delete subject');
+      }
+    }
+  };
+
   const handleTermPress = (term: TermWithSubjects) => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -270,9 +307,14 @@ export default function SubjectDetailScreen() {
           ) : (
             <>
               <Text style={styles.headerTitle}>{currentName}</Text>
-              <TouchableOpacity onPress={handleEditName} style={styles.editIconButton} activeOpacity={0.7}>
-                <Edit3 size={20} color="#FFFFFF" />
-              </TouchableOpacity>
+              <View style={styles.headerActions}>
+                <TouchableOpacity onPress={handleEditName} style={styles.editIconButton} activeOpacity={0.7}>
+                  <Edit3 size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleDelete} style={styles.editIconButton} activeOpacity={0.7}>
+                  <Trash2 size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
             </>
           )}
         </View>
@@ -515,5 +557,9 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 4,
   },
 });
