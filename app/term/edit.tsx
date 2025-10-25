@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { LinearGradient } from 'expo-linear-gradient';
 import { database } from '@/services/database';
 import { Subject, TermWithSubjects } from '@/types/database';
 import { Colors } from '@/constants/colors';
@@ -148,20 +149,44 @@ export default function EditTermScreen() {
 
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.text }]}>Definition</Text>
-            <TextInput
-              style={[
-                styles.input,
-                styles.textArea,
-                { backgroundColor: colors.card, color: colors.text, borderColor: colors.border },
-              ]}
-              placeholder="Enter definition"
-              placeholderTextColor={colors.secondaryText}
-              value={definition}
-              onChangeText={setDefinition}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
+            <View style={styles.textAreaWrapper}>
+              <View style={styles.textAreaGlow} pointerEvents="none">
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowTop}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  style={styles.glowBottom}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.glowLeft}
+                />
+                <LinearGradient
+                  colors={['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  style={styles.glowRight}
+                />
+              </View>
+              <TextInput
+                style={[
+                  styles.input,
+                  styles.textArea,
+                  { backgroundColor: colors.card, color: colors.text, borderColor: colors.primary, borderWidth: 1 },
+                ]}
+                placeholder="Enter definition"
+                placeholderTextColor={colors.secondaryText}
+                value={definition}
+                onChangeText={setDefinition}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
           </View>
 
           <View style={styles.subjectsContainer}>
@@ -267,7 +292,50 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   textArea: {
-    minHeight: 120,
+    minHeight: 300,
+  },
+  textAreaWrapper: {
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 12,
+  },
+  textAreaGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 12,
+    zIndex: 1,
+  },
+  glowTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 14,
+  },
+  glowBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 14,
+    transform: [{ rotate: '180deg' }],
+  },
+  glowLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 14,
+  },
+  glowRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 14,
   },
   subjectsContainer: {
     marginBottom: 24,
